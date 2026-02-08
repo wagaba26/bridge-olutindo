@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { createSupabaseBrowserClientOrNull } from "@/lib/supabase/client";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -17,7 +17,12 @@ export default function ResetPasswordPage() {
   const [info, setInfo] = useState<string | null>(null);
 
   useEffect(() => {
-    const supabase = createSupabaseBrowserClient();
+    const supabase = createSupabaseBrowserClientOrNull();
+    if (!supabase) {
+      setInfo("Password reset is temporarily unavailable. Please contact support.");
+      return;
+    }
+
     supabase.auth.getSession().then(({ data }) => {
       if (!data.session) {
         setInfo("Open this page from your reset email link to set a new password.");
@@ -41,7 +46,13 @@ export default function ResetPasswordPage() {
 
     setIsSaving(true);
     try {
-      const supabase = createSupabaseBrowserClient();
+      const supabase = createSupabaseBrowserClientOrNull();
+      if (!supabase) {
+        setError("Password reset is temporarily unavailable. Please contact support.");
+        setIsSaving(false);
+        return;
+      }
+
       const { error: updateError } = await supabase.auth.updateUser({ password });
 
       if (updateError) {

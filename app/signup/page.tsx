@@ -8,29 +8,46 @@ import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/ui/fade-in";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { createSupabaseBrowserClientOrNull } from "@/lib/supabase/client";
 
 export default function SignupPage() {
   const router = useRouter();
+  const authEnabled =
+    Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL) &&
+    Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
   const [isLoading, setIsLoading] = useState(false);
   const [isOAuthLoading, setIsOAuthLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
 
   useEffect(() => {
-    const supabase = createSupabaseBrowserClient();
+    if (!authEnabled) {
+      return;
+    }
+
+    const supabase = createSupabaseBrowserClientOrNull();
+    if (!supabase) {
+      return;
+    }
+
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) {
         router.replace("/dashboard");
       }
     });
-  }, [router]);
+  }, [authEnabled, router]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
     setInfo(null);
     setIsLoading(true);
+
+    if (!authEnabled) {
+      setError("Authentication is temporarily unavailable. Please contact support.");
+      setIsLoading(false);
+      return;
+    }
 
     const form = e.currentTarget;
     const name = (form.elements.namedItem("name") as HTMLInputElement)?.value;
@@ -39,7 +56,13 @@ export default function SignupPage() {
     const role = (form.elements.namedItem("role") as HTMLInputElement)?.value;
 
     try {
-      const supabase = createSupabaseBrowserClient();
+      const supabase = createSupabaseBrowserClientOrNull();
+      if (!supabase) {
+        setError("Authentication is temporarily unavailable. Please contact support.");
+        setIsLoading(false);
+        return;
+      }
+
       const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
@@ -69,8 +92,20 @@ export default function SignupPage() {
     setError(null);
     setIsOAuthLoading(true);
 
+    if (!authEnabled) {
+      setError("Google sign-in is temporarily unavailable. Please use email sign-up.");
+      setIsOAuthLoading(false);
+      return;
+    }
+
     try {
-      const supabase = createSupabaseBrowserClient();
+      const supabase = createSupabaseBrowserClientOrNull();
+      if (!supabase) {
+        setError("Google sign-in is temporarily unavailable. Please use email sign-up.");
+        setIsOAuthLoading(false);
+        return;
+      }
+
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
@@ -152,6 +187,11 @@ export default function SignupPage() {
                   Log in
                 </Link>
               </div>
+              {!authEnabled ? (
+                <p className="rounded-lg border border-amber-200 bg-amber-50 p-2 text-xs text-amber-700">
+                  Authentication is temporarily unavailable in this environment.
+                </p>
+              ) : null}
               {error && <p className="text-xs text-red-500">{error}</p>}
               {info && <p className="text-xs text-emerald-600">{info}</p>}
             </CardContent>

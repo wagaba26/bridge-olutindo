@@ -5,7 +5,7 @@ import Link from "next/link";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { createSupabaseBrowserClientOrNull } from "@/lib/supabase/client";
 
 type WordCard = {
   id: string;
@@ -411,9 +411,12 @@ function seededShuffle<T>(items: T[], seed: number) {
 }
 
 export default function TeachYourselfPage() {
+  const authEnabled =
+    Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL) &&
+    Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
   const [todayKey] = useState(getTodayKey);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [authResolved, setAuthResolved] = useState(false);
+  const [authResolved, setAuthResolved] = useState(!authEnabled);
   const [dailyCount, setDailyCount] = useState(0);
   const [quizIndex, setQuizIndex] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
@@ -421,7 +424,15 @@ export default function TeachYourselfPage() {
   const dailyQuizLimit = isAuthenticated ? AUTH_DAILY_QUIZ_LIMIT : GUEST_DAILY_QUIZ_LIMIT;
 
   useEffect(() => {
-    const supabase = createSupabaseBrowserClient();
+    if (!authEnabled) {
+      return;
+    }
+
+    const supabase = createSupabaseBrowserClientOrNull();
+    if (!supabase) {
+      return;
+    }
+
     supabase.auth.getSession().then(({ data }) => {
       setIsAuthenticated(Boolean(data.session));
       setAuthResolved(true);
@@ -435,7 +446,7 @@ export default function TeachYourselfPage() {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [authEnabled]);
 
   const dailySpotlightWords = useMemo(() => {
     const seed = hashString(`spotlight-${todayKey}`);
