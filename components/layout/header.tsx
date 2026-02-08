@@ -1,16 +1,21 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CircleUserRound } from "lucide-react";
 
-import { MobileDrawer } from "@/components/site/mobile-drawer";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/logo";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { MAIN_NAV_ITEMS } from "@/types/navigation";
+
+const MobileDrawer = dynamic(
+  () => import("@/components/site/mobile-drawer").then((module) => module.MobileDrawer),
+  { ssr: false }
+);
 
 export function Header() {
   const pathname = usePathname();
@@ -62,7 +67,7 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95">
       <div className="container mx-auto flex h-16 items-center gap-3 px-4 lg:h-[72px]">
         <div className="lg:hidden">
           <MobileDrawer isAuthenticated={isAuthenticated} authResolved={authResolved} onSignOut={handleSignOut} />
