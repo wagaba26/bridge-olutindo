@@ -126,7 +126,7 @@ export default function StudyPage() {
             title="Book a study planning call with our team."
             description="Share your current level, grades, and goals, and we’ll outline possible timelines and school options in Japan."
           />
-          <Button asChild className="bg-brand-red hover:bg-brand-red/90 rounded-full px-10">
+          <Button asChild className="rounded-full px-10">
             <Link href="/intake?focus=study">Talk to a study advisor</Link>
           </Button>
         </div>

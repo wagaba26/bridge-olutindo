@@ -19,14 +19,19 @@ const SOURCE_COPY: Record<string, { title: string; description: string }> = {
     title: "Thanks for your partnership interest.",
     description: "We will review the details and reach out to schedule a call.",
   },
+  consultation: {
+    title: "Consultation request received.",
+    description: "Your free consultation request has been submitted. We will confirm your selected slot shortly.",
+  },
 };
 
-export default function ThankYouPage({
+export default async function ThankYouPage({
   searchParams,
 }: {
-  searchParams?: ThankYouSearchParams;
+  searchParams?: Promise<ThankYouSearchParams>;
 }) {
-  const source = typeof searchParams?.source === "string" ? searchParams.source : "intake";
+  const resolved = searchParams ? await searchParams : undefined;
+  const source = typeof resolved?.source === "string" ? resolved.source : "intake";
   const content = SOURCE_COPY[source] ?? SOURCE_COPY.intake;
 
   return (
@@ -40,7 +45,7 @@ export default function ThankYouPage({
             description={content.description}
           />
           <div className="flex flex-wrap justify-center gap-3">
-            <Button asChild className="bg-brand-red hover:bg-brand-red/90 rounded-full px-8">
+            <Button asChild className="rounded-full px-8">
               <Link href="/">Back to home</Link>
             </Button>
             <Button asChild variant="outline" className="rounded-full px-8">

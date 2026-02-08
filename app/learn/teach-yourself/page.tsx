@@ -5,6 +5,7 @@ import Link from "next/link";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 type WordCard = {
   id: string;
@@ -379,7 +380,8 @@ const WORDS: WordCard[] = [
   },
 ];
 
-const DAILY_QUIZ_LIMIT = 10;
+const GUEST_DAILY_QUIZ_LIMIT = 10;
+const AUTH_DAILY_QUIZ_LIMIT = 30;
 const DAILY_SPOTLIGHT_LIMIT = 6;
 const QUIZ_STORAGE_KEY = "teach-yourself-n5-quiz";
 
@@ -410,10 +412,30 @@ function seededShuffle<T>(items: T[], seed: number) {
 
 export default function TeachYourselfPage() {
   const [todayKey] = useState(getTodayKey);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authResolved, setAuthResolved] = useState(false);
   const [dailyCount, setDailyCount] = useState(0);
   const [quizIndex, setQuizIndex] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [quizFeedback, setQuizFeedback] = useState<string | null>(null);
+  const dailyQuizLimit = isAuthenticated ? AUTH_DAILY_QUIZ_LIMIT : GUEST_DAILY_QUIZ_LIMIT;
+
+  useEffect(() => {
+    const supabase = createSupabaseBrowserClient();
+    supabase.auth.getSession().then(({ data }) => {
+      setIsAuthenticated(Boolean(data.session));
+      setAuthResolved(true);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(Boolean(session));
+      setAuthResolved(true);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const dailySpotlightWords = useMemo(() => {
     const seed = hashString(`spotlight-${todayKey}`);
@@ -425,29 +447,34 @@ export default function TeachYourselfPage() {
     const shuffled = seededShuffle(WORDS, seed);
     const spotlightIds = new Set(dailySpotlightWords.map((word) => word.id));
     const filtered = shuffled.filter((word) => !spotlightIds.has(word.id));
-    return filtered.slice(0, DAILY_QUIZ_LIMIT);
-  }, [todayKey, dailySpotlightWords]);
+    return filtered.slice(0, dailyQuizLimit);
+  }, [todayKey, dailySpotlightWords, dailyQuizLimit]);
 
-  const [activeWord, setActiveWord] = useState(dailySpotlightWords[0]);
+  const [activeWordId, setActiveWordId] = useState<string | null>(dailySpotlightWords[0]?.id ?? null);
+  const activeWord = useMemo(() => {
+    return (
+      dailySpotlightWords.find((word) => word.id === activeWordId) ??
+      dailySpotlightWords[0] ??
+      WORDS[0]
+    );
+  }, [dailySpotlightWords, activeWordId]);
 
-  useEffect(() => {
-    if (dailySpotlightWords.length > 0) {
-      setActiveWord(dailySpotlightWords[0]);
-    }
-  }, [dailySpotlightWords]);
+  const quizStorageKey = `${QUIZ_STORAGE_KEY}-${isAuthenticated ? "auth" : "guest"}`;
 
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
 
-    const stored = window.localStorage.getItem(QUIZ_STORAGE_KEY);
+    const stored = window.localStorage.getItem(quizStorageKey);
     if (stored) {
       try {
         const parsed = JSON.parse(stored) as { date: string; count: number };
         if (parsed.date === todayKey) {
-          setDailyCount(parsed.count);
-          setQuizIndex(Math.min(parsed.count, DAILY_QUIZ_LIMIT));
+          queueMicrotask(() => {
+            setDailyCount(parsed.count);
+            setQuizIndex(Math.min(parsed.count, dailyQuizLimit));
+          });
           return;
         }
       } catch {
@@ -456,26 +483,36 @@ export default function TeachYourselfPage() {
     }
 
     const nextState = { date: todayKey, count: 0 };
-    window.localStorage.setItem(QUIZ_STORAGE_KEY, JSON.stringify(nextState));
-    setDailyCount(0);
-    setQuizIndex(0);
-  }, [todayKey]);
+    window.localStorage.setItem(quizStorageKey, JSON.stringify(nextState));
+    queueMicrotask(() => {
+      setDailyCount(0);
+      setQuizIndex(0);
+    });
+  }, [todayKey, quizStorageKey, dailyQuizLimit]);
 
   const quizWord = dailyQuizWords[Math.min(quizIndex, dailyQuizWords.length - 1)];
   const quizOptions = useMemo(() => {
     if (!quizWord) {
       return [];
     }
+
+    const distractors = seededShuffle(
+      WORDS.filter((word) => word.id !== quizWord.id),
+      hashString(`${todayKey}-${quizWord.id}-distractors`)
+    )
+      .map((word) => word.meaning)
+      .filter((meaning, index, arr) => arr.indexOf(meaning) === index)
+      .slice(0, 3);
+
     const options = seededShuffle(
-      [quizWord, ...WORDS.filter((word) => word.id !== quizWord.id).slice(0, 3)].map(
-        (word) => word.meaning
-      ),
-      hashString(`${todayKey}-${quizWord.id}`)
+      [quizWord.meaning, ...distractors],
+      hashString(`${todayKey}-${quizWord.id}-options`)
     );
+
     return options;
   }, [quizWord, todayKey]);
 
-  const limitReached = dailyCount >= DAILY_QUIZ_LIMIT;
+  const limitReached = dailyCount >= dailyQuizLimit;
 
   function handleSelectOption(option: string) {
     if (selected || limitReached || !quizWord) {
@@ -484,11 +521,11 @@ export default function TeachYourselfPage() {
     setSelected(option);
     const isCorrect = option === quizWord.meaning;
     setQuizFeedback(isCorrect ? "Correct! Keep going." : `Not quite. The answer is “${quizWord.meaning}”.`);
-    const nextCount = Math.min(dailyCount + 1, DAILY_QUIZ_LIMIT);
+    const nextCount = Math.min(dailyCount + 1, dailyQuizLimit);
     setDailyCount(nextCount);
     if (typeof window !== "undefined") {
       window.localStorage.setItem(
-        QUIZ_STORAGE_KEY,
+        quizStorageKey,
         JSON.stringify({ date: todayKey, count: nextCount })
       );
     }
@@ -513,7 +550,7 @@ export default function TeachYourselfPage() {
             description="N5-level word practice and daily quizzes to build confidence before you apply."
           />
           <div className="flex flex-wrap gap-3">
-            <Button asChild className="bg-brand-red hover:bg-brand-red/90 rounded-full px-8">
+            <Button asChild className="rounded-full px-8">
               <Link href="/intake?focus=learn">Join a class</Link>
             </Button>
             <Button asChild variant="outline" className="rounded-full px-8">
@@ -525,7 +562,7 @@ export default function TeachYourselfPage() {
 
       <section className="py-16 md:py-20">
         <div className="container mx-auto px-4 grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] items-start">
-          <div className="space-y-8">
+          <div className="order-2 space-y-8 lg:order-1">
             <Card>
               <CardHeader>
                 <CardTitle>Word spotlight</CardTitle>
@@ -544,7 +581,7 @@ export default function TeachYourselfPage() {
                       key={word.id}
                       type="button"
                       onClick={() => {
-                        setActiveWord(word);
+                        setActiveWordId(word.id);
                       }}
                       className={`rounded-xl border px-4 py-3 text-left text-sm transition-colors ${
                         activeWord.id === word.id
@@ -586,7 +623,7 @@ export default function TeachYourselfPage() {
             </Card>
           </div>
 
-          <div className="space-y-8">
+          <div className="order-1 space-y-8 lg:order-2">
             <Card>
               <CardHeader>
                 <CardTitle>Quick quiz</CardTitle>
@@ -594,20 +631,31 @@ export default function TeachYourselfPage() {
               <CardContent className="space-y-4">
                 {limitReached ? (
                   <div className="rounded-2xl border bg-slate-50 p-5 space-y-3">
-                    <p className="text-sm text-muted-foreground">
-                      You have completed today&apos;s 10 N5 practice questions.
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Practice again tomorrow or log in for full access to the self‑learn quiz.
-                    </p>
-                    <div className="flex flex-wrap gap-3">
-                      <Button asChild className="bg-brand-red hover:bg-brand-red/90 rounded-full px-6">
-                        <Link href="/login">Log in</Link>
-                      </Button>
-                      <Button asChild variant="outline" className="rounded-full px-6">
-                        <Link href="/signup">Sign up</Link>
-                      </Button>
-                    </div>
+                    {isAuthenticated ? (
+                      <>
+                        <p className="text-sm text-muted-foreground">
+                          You have completed today&apos;s {dailyQuizLimit} N5 practice questions.
+                        </p>
+                        <p className="text-sm text-muted-foreground">Great work. Come back tomorrow for a new set.</p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-sm text-muted-foreground">
+                          You have completed today&apos;s {dailyQuizLimit} N5 practice questions.
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Log in to unlock up to {AUTH_DAILY_QUIZ_LIMIT} questions per day.
+                        </p>
+                        <div className="flex flex-wrap gap-3">
+                          <Button asChild className="rounded-full px-6">
+                            <Link href="/login">Log in</Link>
+                          </Button>
+                          <Button asChild variant="outline" className="rounded-full px-6">
+                            <Link href="/signup">Sign up</Link>
+                          </Button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 ) : (
                   <>
@@ -639,11 +687,15 @@ export default function TeachYourselfPage() {
                     ) : null}
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <span>
-                        Question {Math.min(dailyCount + 1, DAILY_QUIZ_LIMIT)} of {DAILY_QUIZ_LIMIT}
+                        Question {Math.min(dailyCount + 1, dailyQuizLimit)} of {dailyQuizLimit}
                       </span>
-                      <span>Daily limit</span>
+                      <span>{authResolved && isAuthenticated ? "Member daily limit" : "Daily limit"}</span>
                     </div>
-                    <Button type="button" onClick={handleNextQuestion} className="bg-brand-red hover:bg-brand-red/90">
+                    <Button
+                      type="button"
+                      onClick={handleNextQuestion}
+                      className="w-full rounded-xl bg-slate-900 text-white shadow-sm hover:bg-slate-800"
+                    >
                       Next question
                     </Button>
                   </>

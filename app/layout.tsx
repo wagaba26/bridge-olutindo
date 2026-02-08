@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Manrope } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
+const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 
 export const metadata: Metadata = {
   title: "Bridge Olutindo | Connect with Japan",
@@ -19,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.variable} ${outfit.variable} antialiased min-h-screen flex flex-col font-sans`}>
+      <body className={`${manrope.variable} antialiased min-h-screen flex flex-col font-sans`}>
         <Header />
         <main className="flex-1">
           {children}

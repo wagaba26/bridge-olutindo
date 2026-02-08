@@ -1,8 +1,6 @@
 import { ReactNode } from "react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { SectionHeading } from "@/components/ui/section-heading";
+import { AccountNav } from "@/components/dashboard/account-nav";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const DASHBOARD_LINKS = [
@@ -10,8 +8,9 @@ const DASHBOARD_LINKS = [
   { href: "/dashboard/programs", label: "Programs" },
   { href: "/dashboard/applications", label: "Applications" },
   { href: "/dashboard/billing", label: "Billing" },
-  { href: "/dashboard/leads", label: "Leads" },
 ];
+
+const STAFF_ROLES = new Set(["admin", "teacher"]);
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const supabase = await createSupabaseServerClient();
@@ -23,32 +22,39 @@ export default async function DashboardLayout({ children }: { children: ReactNod
     redirect("/login");
   }
 
+  const role = String((user.user_metadata?.primary_role ?? "")).toLowerCase().trim();
+  const links = [...DASHBOARD_LINKS];
+  if (STAFF_ROLES.has(role)) {
+    links.push({ href: "/dashboard/teaching", label: "Teaching Desk" });
+  }
+  if (role === "admin") {
+    links.push({ href: "/dashboard/leads", label: "Leads" });
+    links.push({ href: "/dashboard/security", label: "Security" });
+  }
+
+  const userLabel = user.email ?? "Signed-in user";
+  const roleLabel = role ? role[0].toUpperCase() + role.slice(1) : "Member";
+
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-slate-50/80">
-      <div className="container mx-auto px-4 py-10 md:py-14 grid gap-8 md:grid-cols-[240px_minmax(0,1fr)]">
-        <aside className="space-y-6">
-          <SectionHeading
-            eyebrow="Dashboard"
-            title="Your Bridge space."
-            description="This area will surface your programs, applications, and billing."
-          />
-          <nav className="space-y-1 text-sm">
-            {DASHBOARD_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "flex items-center justify-between rounded-full px-4 py-2 transition-colors hover:bg-slate-200 text-slate-800"
-                )}
-              >
-                <span>{link.label}</span>
-              </Link>
-            ))}
-          </nav>
+      <div className="container mx-auto grid gap-6 px-4 py-8 md:grid-cols-[186px_minmax(0,1fr)] md:gap-6 md:py-12">
+        <aside className="hidden space-y-3 md:block">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">My Account</p>
+            <p className="mt-1 text-sm font-semibold text-slate-900">Workspace</p>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 bg-white p-3.5">
+            <p className="truncate text-sm font-medium text-slate-900">{userLabel}</p>
+            <p className="mt-1 inline-flex rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-700">
+              {roleLabel}
+            </p>
+          </div>
+
+          <AccountNav links={links} />
         </aside>
         <main className="space-y-6">{children}</main>
       </div>
     </div>
   );
 }
-

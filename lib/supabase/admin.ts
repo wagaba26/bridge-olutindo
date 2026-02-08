@@ -1,14 +1,19 @@
 import { createClient } from "@supabase/supabase-js";
 
-export function createSupabaseAdminClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+export async function createSupabaseAdminOrServerClient() {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  if (!url || !serviceRoleKey) {
-    return null;
+  if (serviceRoleKey) {
+    return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceRoleKey, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
   }
 
-  return createClient(url, serviceRoleKey, {
-    auth: { persistSession: false },
-  });
+  return createSupabaseServerClient();
+}
+
+export async function createSupabaseAdminClient() {
+  return createSupabaseAdminOrServerClient();
 }

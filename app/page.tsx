@@ -1,219 +1,196 @@
- "use client";
-
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight, BookOpenCheck, Compass, GraduationCap, PlaneTakeoff } from "lucide-react";
+
+import { LogoStrip } from "@/components/site/logo-strip";
+import { PillarCardsCarousel } from "@/components/site/pillar-cards-carousel";
+import { TrustStrip } from "@/components/site/trust-strip";
 import { Button } from "@/components/ui/button";
-import { ServicePanel } from "@/components/ui/service-panel";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { StoryCard } from "@/components/ui/story-card";
-import { FadeIn } from "@/components/ui/fade-in";
-import {
-  BookOpen,
-  Briefcase,
-  GraduationCap,
-  Handshake,
-  Plane,
-  Globe,
-  ArrowRight,
-} from "lucide-react";
+
+const stories = [
+  {
+    title: "From Kampala to Osaka: John started his first engineering role",
+    excerpt: "How language prep and interview support helped him settle into a factory career.",
+    image: "/images/home/success/success-1.jpg",
+  },
+  {
+    title: "Sarah secured a Tokyo scholarship in one intake cycle",
+    excerpt: "A practical breakdown of documents, interview prep, and timeline planning.",
+    image: "/images/home/success/success-2.jpg",
+  },
+  {
+    title: "What N4 changed for David's caregiving applications",
+    excerpt: "Why conversational confidence and discipline made a clear difference.",
+    image: "/images/home/success/success-3.jpg",
+  },
+];
+
+const japan101 = [
+  { title: "Visa checklist", icon: PlaneTakeoff },
+  { title: "Housing setup", icon: Compass },
+  { title: "Workplace etiquette", icon: BookOpenCheck },
+  { title: "School admissions", icon: GraduationCap },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Hero Section */}
-      <section className="relative h-[640px] flex items-center justify-center overflow-hidden bg-slate-900 text-white">
-        <div className="absolute inset-0 z-0">
+    <div className="min-h-screen">
+      <section className="relative overflow-hidden border-b bg-slate-900 text-white">
+        <div className="absolute inset-0">
           <Image
-            src="/hero-bridge-illustration.jpeg"
-            alt="Bridge Olutindo learning, work, and study pathways"
+            src="/images/home/home-hero.jpg"
+            alt="Bridge Olutindo pathways"
             fill
-            className="object-cover"
+            className="object-cover opacity-70"
             priority
+            sizes="100vw"
           />
-          <div className="absolute inset-0 bg-slate-900/45" />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/25 via-slate-900/50 to-slate-900/80" />
+          <div className="absolute inset-0 bg-[linear-gradient(145deg,rgba(8,19,34,0.8),rgba(8,19,34,0.55)_55%,rgba(8,19,34,0.88))]" />
         </div>
 
-        <FadeIn>
-          <div className="container relative z-10 px-4 text-center max-w-4xl mx-auto mt-[-50px]">
-            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 drop-shadow-md">
-              Learn Japanese. <br className="hidden md:block" />
-              <span className="text-brand-orange">Work &amp; Study</span> in Japan.
-            </h1>
-            <p className="text-lg md:text-xl text-slate-100 mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow">
-              Bridge Olutindo connects Ugandan talent with opportunities in Japan.
-              From language mastery to career placement, we are your trusted partner.
+        <div className="container relative mx-auto px-4 py-14 md:py-24">
+          <div className="max-w-2xl">
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-slate-200">Bridge Olutindo</p>
+            <h1>Learn Japanese and access meaningful work and study paths in Japan.</h1>
+            <p className="mt-5 max-w-xl text-base text-slate-200 md:text-lg">
+              We support Ugandans with language training, placement preparation, and trusted partner connections from
+              first inquiry to arrival.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                asChild
-                size="lg"
-                className="bg-brand-red hover:bg-brand-red/90 text-white text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all"
-              >
-                <Link href="/intake">Start Your Journey</Link>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <Button asChild variant="secondary" className="h-11 rounded-xl px-5">
+                <Link href="/intake">Get Started</Link>
               </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="border-white text-white bg-transparent hover:bg-white/20 text-lg px-8 py-6 rounded-full backdrop-blur-sm"
-              >
-                <Link href="/partners">For Partners</Link>
+              <Button asChild variant="outline" className="h-11 rounded-xl border-white/40 bg-transparent px-5 text-white hover:bg-white/10 hover:text-white">
+                <Link href="/jobs">Explore Jobs</Link>
               </Button>
             </div>
           </div>
-        </FadeIn>
-      </section>
-
-      {/* Services Grid (Overlapping Hero) */}
-      <section className="relative z-20 py-16 -mt-32 px-4">
-        <div className="container mx-auto">
-          <FadeIn>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <ServicePanel
-                title="Learn"
-                description="Master Japanese with N5-N3 courses designed for rapid progress."
-                href="/learn"
-                icon={<BookOpen className="w-6 h-6" />}
-                theme="red"
-              />
-              <ServicePanel
-                title="Jobs"
-                description="Find high-paying careers in factories, caregiving, and IT."
-                href="/jobs"
-                icon={<Briefcase className="w-6 h-6" />}
-                theme="blue"
-              />
-              <ServicePanel
-                title="Study"
-                description="Access scholarships and language schools across Japan."
-                href="/study"
-                icon={<GraduationCap className="w-6 h-6" />}
-                theme="orange"
-              />
-              <ServicePanel
-                title="Partners"
-                description="Connect with top Ugandan talent for your institution."
-                href="/partners"
-                icon={<Handshake className="w-6 h-6" />}
-                theme="teal"
-              />
-            </div>
-          </FadeIn>
         </div>
       </section>
 
-      {/* Teach Yourself */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4 grid gap-10 md:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] items-center">
-          <SectionHeading
-            eyebrow="Teach Yourself"
-            title="Practice Japanese in minutes a day."
-            description="Use interactive vocab, flashcards, and quizzes to build confidence before you join a class."
-          />
-          <div className="rounded-2xl border bg-card p-6 shadow-sm space-y-4 text-sm text-muted-foreground">
-            <p>
-              Explore daily words, see examples, and test yourself with quick quizzes. It&apos;s a simple way to keep
-              momentum between lessons.
-            </p>
-            <Button asChild className="bg-brand-blue hover:bg-brand-blue/90 rounded-full px-8">
-              <Link href="/learn/teach-yourself">Start practicing</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Success Stories / News Strip */}
-      <section className="py-20 bg-slate-50 dark:bg-slate-900/50">
+      <section className="-mt-6 pb-8 md:-mt-8 md:pb-10">
         <div className="container mx-auto px-4">
-          <FadeIn>
-            <div className="flex justify-between items-end mb-12 gap-4">
-              <SectionHeading
-                eyebrow="Success Stories"
-                title="Real journeys from Uganda to Japan"
-                description="See how Ugandans are transforming their lives through Bridge Olutindo’s programs."
-              />
-              <Link href="/blog" className="hidden md:flex items-center text-brand-blue font-semibold hover:underline">
-                View all stories <ArrowRight className="ml-2 w-4 h-4" />
-              </Link>
-            </div>
+          <TrustStrip
+            items={[
+              { value: "24-72h", label: "Typical response window" },
+              { value: "N5-N3", label: "Structured language tracks" },
+              { value: "UG + JP", label: "Cross-border support desks" },
+              { value: "Free", label: "Consultation booking" },
+            ]}
+            className="shadow-[0_8px_28px_rgba(15,23,42,0.07)]"
+          />
+        </div>
+      </section>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <StoryCard
-                category="Career Track"
-                categoryColor="blue"
-                title="From Kampala to Osaka: John's Engineering Journey"
-                excerpt="John completed N4 training with Bridge and secured a position at a leading automotive factory in Osaka within 6 months."
-                href="/blog"
-              />
-              <StoryCard
-                category="Study Abroad"
-                categoryColor="orange"
-                title="Sarah's Scholarship Success at Tokyo University"
-                excerpt="Awarded a full scholarship, Sarah shares her tips for acing the interview and adapting to life in Tokyo."
-                href="/blog"
-              />
-              <StoryCard
-                category="Language"
-                categoryColor="red"
-                title="Mastering Kanji: 5 Tips for Beginners"
-                excerpt="Our lead instructor breaks down the most effective methods for memorizing Kanji characters quickly."
-                href="/blog"
-              />
-            </div>
+      <PillarCardsCarousel />
 
-            <div className="mt-8 md:hidden text-center">
-              <Button asChild variant="outline" className="w-full">
-                <Link href="/blog">View all stories</Link>
+      <section className="pb-12">
+        <div className="container mx-auto px-4">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.06)] md:p-8">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">
+                Uganda-Japan Business Consultancy
+              </p>
+              <h2 className="mt-2 text-[1.6rem]">Practical support for cross-border business growth.</h2>
+              <ul className="mt-4 space-y-2 text-sm text-slate-600">
+                <li>- Market entry orientation for Uganda and Japan.</li>
+                <li>- Partner matching, business communication, and negotiation support.</li>
+                <li>- Guidance on operational setup, compliance flow, and local onboarding.</li>
+              </ul>
+            </div>
+            <div className="flex items-end">
+              <Button asChild className="h-11 rounded-xl px-5">
+                <Link href="/consultation">Book business consultation</Link>
               </Button>
             </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* Resources / "Japan 101" Strip */}
-      <section className="py-20 bg-slate-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-20 bg-[url('/pattern.png')]"></div> {/* Placeholder pattern */}
-        <div className="container relative z-10 mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6">New to Japan?</h2>
-          <p className="text-slate-300 max-w-2xl mx-auto mb-10 text-lg">
-            We&apos;ve curated a comprehensive guide specifically for Ugandans moving to Japan.
-            From visa applications to finding halal food.
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            <Link href="/blog" className="flex flex-col items-center p-6 bg-white/10 hover:bg-brand-red/80 rounded-xl transition-all backdrop-blur-sm border border-white/10">
-              <Plane className="w-8 h-8 mb-3" />
-              <span className="font-semibold">Visa Guide</span>
-            </Link>
-            <Link href="/blog" className="flex flex-col items-center p-6 bg-white/10 hover:bg-brand-blue/80 rounded-xl transition-all backdrop-blur-sm border border-white/10">
-              <Globe className="w-8 h-8 mb-3" />
-              <span className="font-semibold">Culture Shock</span>
-            </Link>
-            <Link href="/blog" className="flex flex-col items-center p-6 bg-white/10 hover:bg-brand-orange/80 rounded-xl transition-all backdrop-blur-sm border border-white/10">
-              <Briefcase className="w-8 h-8 mb-3" />
-              <span className="font-semibold">Work Etiquette</span>
-            </Link>
-            <Link href="/blog" className="flex flex-col items-center p-6 bg-white/10 hover:bg-network-teal/80 rounded-xl transition-all backdrop-blur-sm border border-white/10">
-              <BookOpen className="w-8 h-8 mb-3" />
-              <span className="font-semibold">Daily Phrases</span>
-            </Link>
           </div>
         </div>
       </section>
 
-      {/* Partners Banner */}
-      <section className="py-16 bg-white dark:bg-background">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-sm font-semibold text-muted-foreground uppercase tracking-widest mb-8">Trusted by Institutions in Uganda & Japan</p>
-          <div className="flex flex-wrap justify-center gap-8 md:gap-16 grayscale opacity-60 hover:opacity-100 transition-opacity">
-            {/* Placeholder Logos - Text for now */}
-            <div className="text-xl font-bold font-serif text-slate-800">Kyoto Language Academy</div>
-            <div className="text-xl font-bold font-sans text-slate-800">Makerere University</div>
-            <div className="text-xl font-bold font-mono text-slate-800">Toyota Industries</div>
-            <div className="text-xl font-bold text-slate-800">Kampala Innovation Hub</div>
+      <section className="pb-12">
+        <div className="container mx-auto px-4">
+          <div className="grid gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.06)] md:grid-cols-[1.2fr_0.8fr] md:p-8">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">Teach yourself and practice</p>
+              <h2 className="mt-2 text-[1.6rem]">Build daily Japanese confidence before class.</h2>
+              <ul className="mt-4 space-y-2 text-sm text-slate-600">
+                <li>- Short vocabulary drills and phrase sets.</li>
+                <li>- Quick quizzes to review grammar and listening.</li>
+                <li>- Weekly prompts for real-life conversation topics.</li>
+              </ul>
+              <Button asChild className="mt-5 h-11 rounded-xl px-5">
+                <Link href="/learn/teach-yourself">Start practicing</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
+
+      <section className="bg-slate-100/70 py-12 md:py-16">
+        <div className="container mx-auto px-4">
+          <div className="mb-6 flex items-end justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">Success stories</p>
+              <h2 className="mt-2">Real outcomes from Uganda to Japan.</h2>
+            </div>
+            <Link href="/blog" className="hidden text-sm font-semibold text-slate-800 md:inline-flex">
+              More from resources
+            </Link>
+          </div>
+
+          <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:overflow-visible">
+            {stories.map((story) => (
+              <article
+                key={story.title}
+                className="min-w-[84%] snap-start rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_2px_16px_rgba(15,23,42,0.06)] md:min-w-0"
+              >
+                <div className="relative mb-4 aspect-[4/3] overflow-hidden rounded-xl">
+                  <Image src={story.image} alt={story.title} fill className="object-cover" sizes="(max-width: 768px) 85vw, 33vw" />
+                </div>
+                <p className="text-xs font-semibold uppercase tracking-[0.17em] text-slate-500">Story</p>
+                <h3 className="mt-2 text-lg">{story.title}</h3>
+                <p className="mt-2 text-sm text-slate-600">{story.excerpt}</p>
+                <Link href="/blog" className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-slate-900">
+                  Read more
+                  <ArrowRight className="size-4" />
+                </Link>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 md:py-16">
+        <div className="container mx-auto px-4">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 md:p-8">
+            <div className="max-w-2xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">Japan 101 for Ugandans</p>
+              <h2 className="mt-2">New to Japan? Start with the essentials.</h2>
+              <p className="mt-3 text-sm text-slate-600 md:text-base">
+                Quick guides for the first months: documents, housing, work culture, and education planning.
+              </p>
+            </div>
+
+            <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+              {japan101.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.title}
+                    href="/blog"
+                    className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm font-semibold text-slate-800 transition hover:bg-slate-100"
+                  >
+                    <Icon className="mb-2 size-4" />
+                    {item.title}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <LogoStrip />
     </div>
   );
 }

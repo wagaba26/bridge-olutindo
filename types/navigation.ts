@@ -22,14 +22,9 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
     description: "Discover language schools, universities, and exchange programs.",
   },
   {
-    title: "Programs",
+    title: "Partner Program",
     href: "/programs",
-    description: "Explore all our vacational and educational program offerings.",
-  },
-  {
-    title: "Partners",
-    href: "/partners",
-    description: "Partner with us to access top Ugandan talent.",
+    description: "Explore partner-facing programs for institutions and employers.",
   },
   {
     title: "Resources",
@@ -39,7 +34,9 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
 ];
 
 export const SECONDARY_NAV_ITEMS: NavItem[] = [
-  { title: "About Us", href: "/about" },
+  { title: "About", href: "/about" },
   { title: "Contact", href: "/contact" },
-  { title: "For Partners", href: "/partners" },
+  { title: "FAQs", href: "/faq" },
+  { title: "Privacy", href: "/privacy" },
+  { title: "Terms", href: "/terms" },
 ];

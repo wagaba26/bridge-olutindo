@@ -1,200 +1,172 @@
 import Link from "next/link";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { ProgramCard } from "@/components/ui/program-card";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getProgramHref } from "@/lib/programs";
+import { TrustStrip } from "@/components/site/trust-strip";
+import { ProgramCard } from "@/components/ui/program-card";
+import { SectionHeading } from "@/components/ui/section-heading";
 
 export const metadata = {
-  title: "All Programs | Bridge Olutindo",
+  title: "Partner Programs | Bridge Olutindo",
   description:
-    "Explore all Bridge Olutindo programs across language, jobs, and study pathways between Uganda and Japan.",
+    "Explore Bridge Olutindo partner programs for institutions, employers, schools, and Uganda-Japan collaboration initiatives.",
 };
 
 export default function ProgramsPage() {
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero */}
       <section className="border-b bg-slate-50/80">
-        <div className="container mx-auto px-4 py-16 md:py-24 space-y-6">
+        <div className="container mx-auto space-y-6 px-4 py-12 md:py-16">
           <SectionHeading
-            eyebrow="Programs"
-            title="All Bridge Olutindo programs in one place."
-            description="Browse language, job, and study programs that connect Uganda and Japan. Filter by type, level, and delivery mode."
+            eyebrow="Partner Programs"
+            title="Programs built for institutions and cross-border collaboration."
+            description="This page focuses on partner-facing programs. Learner programs for language, jobs, and study remain in their dedicated sections."
           />
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Button asChild className="h-11 rounded-xl px-5">
+              <Link href="/partners#partner-interest-form">Submit partner interest</Link>
+            </Button>
+            <Button asChild variant="secondary" className="h-11 rounded-xl px-5">
+              <Link href="/consultation">Book free consultation</Link>
+            </Button>
+          </div>
           <div className="flex flex-wrap gap-3 text-xs">
-            {["Language", "Jobs", "Study", "Short courses", "Online", "In-person", "Hybrid"].map(
-              (tag) => (
-                <Badge
-                  key={tag}
-                  variant="outline"
-                  className="border-slate-300 text-slate-700"
-                >
-                  {tag}
-                </Badge>
-              )
-            )}
+            {["UG Institutions", "JP Institutions", "Employers", "Schools", "NGOs", "Consultancy"].map((tag) => (
+              <Badge key={tag} variant="outline" className="border-slate-300 text-slate-700">
+                {tag}
+              </Badge>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Program groups */}
-      <section className="py-16 md:py-20">
-        <div className="container mx-auto px-4 space-y-12">
-          {/* Language */}
-          <div className="space-y-5">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2>Japanese language programs</h2>
-              <Badge variant="outline" className="border-brand-blue text-brand-blue">
-                Language
-              </Badge>
-            </div>
-            <div className="grid gap-6 md:grid-cols-3">
-              <ProgramCard
-                title="N5 Foundation"
-                level="N5"
-                duration="12 weeks"
-                mode="Hybrid"
-                highlights={[
-                  "Core grammar and daily vocabulary",
-                  "Ugandan-context examples",
-                  "JLPT-style quizzes",
-                ]}
-                href={getProgramHref("N5 Foundation")}
-              />
-              <ProgramCard
-                title="N4 Completion"
-                level="N4"
-                duration="12 weeks"
-                mode="Hybrid"
-                highlights={[
-                  "Reading and listening drills",
-                  "Mock exams and feedback",
-                  "Exam registration support",
-                ]}
-                href={getProgramHref("N4 Completion")}
-              />
-              <ProgramCard
-                title="N3 Career Japanese"
-                level="N3"
-                duration="16 weeks"
-                mode="Hybrid"
-                highlights={[
-                  "Workplace Japanese for jobs",
-                  "Business email and meetings",
-                  "Interview practice",
-                ]}
-                href={getProgramHref("N3 Career Japanese")}
-              />
-            </div>
-          </div>
+      <section className="-mt-4 pb-8 md:-mt-6 md:pb-10">
+        <div className="container mx-auto px-4">
+          <TrustStrip
+            items={[
+              { value: "24-72h", label: "Partnership response target" },
+              { value: "UG + JP", label: "Institution coordination" },
+              { value: "Free", label: "Consultation booking" },
+              { value: "Hybrid", label: "Delivery model" },
+            ]}
+          />
+        </div>
+      </section>
 
-          {/* Jobs */}
+      <section className="py-10 md:py-12">
+        <div className="container mx-auto space-y-12 px-4">
           <div className="space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2>Job preparation tracks</h2>
-              <Badge variant="outline" className="border-brand-red text-brand-red">
-                Jobs
+              <h2>Partner programs</h2>
+              <Badge variant="outline" className="border-slate-700 text-slate-700">
+                Institutional + Business
               </Badge>
             </div>
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               <ProgramCard
-                title="Factory & Manufacturing Track"
-                duration="3–6 months pre-departure"
-                mode="In-person"
-                highlights={[
-                  "Technical basics for factory roles",
-                  "Safety and quality standards",
-                  "Interview and contract guidance",
-                ]}
-                href={getProgramHref("Factory & Manufacturing Track")}
-              />
-              <ProgramCard
-                title="Caregiving Track"
-                duration="6–9 months pre-departure"
+                title="UG Institution Collaboration Program"
+                duration="Multi-term"
                 mode="Hybrid"
                 highlights={[
-                  "Foundations in care work",
-                  "Japanese for care environments",
-                  "Cultural preparation for long-term roles",
+                  "Curriculum and readiness alignment",
+                  "Joint intake planning and applicant support",
+                  "Coordinated pathway to jobs and study in Japan",
                 ]}
-                href={getProgramHref("Caregiving Track")}
+                ctaLabel="Explore partnership"
+                href="/partners"
               />
               <ProgramCard
-                title="IT & Digital Careers Track"
-                duration="6–12 months pre-departure"
+                title="JP Institution Onboarding Program"
+                duration="Multi-term"
                 mode="Hybrid"
                 highlights={[
-                  "Tech interview coaching",
-                  "Remote collaboration skills",
-                  "Support in exploring high-skill visas",
+                  "Uganda-side candidate pipeline setup",
+                  "Cross-border communication flow design",
+                  "Program launch and performance review support",
                 ]}
-                href={getProgramHref("IT & Digital Careers Track")}
+                ctaLabel="Explore partnership"
+                href="/partners"
               />
-            </div>
-          </div>
-
-          {/* Study */}
-          <div className="space-y-5">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2>Study & scholarship preparation</h2>
-              <Badge variant="outline" className="border-brand-orange text-brand-orange">
-                Study
-              </Badge>
-            </div>
-            <div className="grid gap-6 md:grid-cols-3">
               <ProgramCard
-                title="Language School Placement Support"
-                duration="6–12 months"
-                mode="In-person"
+                title="School and Exchange Framework"
+                duration="Flexible"
+                mode="Hybrid"
                 highlights={[
-                  "School matching in Japan",
-                  "Application document guidance",
-                  "Orientation for new life abroad",
+                  "Language school and university collaboration",
+                  "Exchange program structuring",
+                  "Operational coordination for student mobility",
                 ]}
-                href={getProgramHref("Language School Placement Support")}
+                ctaLabel="Discuss framework"
+                href="/partners"
               />
               <ProgramCard
-                title="Scholarship Strategy Clinic"
-                duration="Short program"
-                mode="Online"
+                title="Employer Talent Pipeline Program"
+                duration="Quarterly cycles"
+                mode="Hybrid"
                 highlights={[
-                  "Clarify realistic scholarship options",
-                  "Improve statements and recommendations",
-                  "Interview coaching and mock panels",
+                  "Language-first talent screening",
+                  "Interview and readiness support",
+                  "Employer matching and onboarding coordination",
                 ]}
-                href={getProgramHref("Scholarship Strategy Clinic")}
+                ctaLabel="Start employer intake"
+                href="/partners"
               />
               <ProgramCard
-                title="Study Planning Session"
+                title="Uganda-Japan Business Consultancy"
+                duration="Flexible engagement"
+                mode="Hybrid"
+                highlights={[
+                  "Market orientation in both countries",
+                  "Partner matching and program structuring",
+                  "Execution support for cross-border operations",
+                ]}
+                ctaLabel="Book free consultation"
+                href="/consultation"
+              />
+              <ProgramCard
+                title="Market Entry Discovery Session"
                 duration="One-time session"
                 mode="Online"
                 highlights={[
-                  "Personalized roadmap for your goals",
-                  "Budget and timeline planning",
-                  "Next steps for parents and guardians",
+                  "Entry viability and risk scan",
+                  "Priority action plan for first 90 days",
+                  "Recommended partner and execution path",
                 ]}
-                href={getProgramHref("Study Planning Session")}
+                ctaLabel="Schedule session"
+                href="/contact"
               />
             </div>
           </div>
 
-          {/* CTA */}
-          <div className="border rounded-2xl bg-slate-900 text-white px-6 md:px-10 py-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div className="space-y-2 max-w-xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-brand-orange">
-                Not sure where to start?
-              </p>
-              <h2 className="text-2xl md:text-3xl font-extrabold">
-                Get a tailored program recommendation.
-              </h2>
-              <p className="text-slate-200 text-sm md:text-base">
-                Tell us if you want to focus on language, work, or study, and we’ll suggest a combination of programs and
-                timelines that fit your current stage.
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 md:p-7">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">How to choose</p>
+            <div className="mt-4 grid gap-3 text-sm text-slate-700 md:grid-cols-3">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <p className="font-semibold text-slate-900">1. Define your goal</p>
+                <p className="mt-1">Hiring pipeline, school collaboration, exchange, or market-entry advisory.</p>
+              </div>
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <p className="font-semibold text-slate-900">2. Pick a model</p>
+                <p className="mt-1">Choose a program card above, then share your preferred start window and scope.</p>
+              </div>
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <p className="font-semibold text-slate-900">3. Start with a call</p>
+                <p className="mt-1">We align teams and send a practical launch path in the first scoping round.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-start justify-between gap-6 rounded-2xl border bg-slate-900 px-6 py-10 text-white md:flex-row md:items-center md:px-10">
+            <div className="max-w-xl space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-300">Need a custom structure?</p>
+              <h2 className="text-2xl font-extrabold md:text-3xl">We can design a partner program around your institution goals.</h2>
+              <p className="text-sm text-slate-200 md:text-base">
+                Share your context and we will propose a practical Uganda-Japan collaboration model, timeline, and
+                implementation steps.
               </p>
             </div>
-            <Button asChild className="bg-brand-red hover:bg-brand-red/90 rounded-full px-8">
-              <Link href="/intake">Talk to our team</Link>
+            <Button asChild className="rounded-full bg-white px-8 text-slate-900 hover:bg-slate-200">
+              <Link href="/partners">Talk to partnerships team</Link>
             </Button>
           </div>
         </div>

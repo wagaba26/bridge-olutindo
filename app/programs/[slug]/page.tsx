@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type ProgramPageProps = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 type ProgramRecord = {
@@ -47,8 +47,9 @@ async function getProgramFromSupabase(slug: string) {
 }
 
 export async function generateMetadata({ params }: ProgramPageProps) {
-  const fallback = getProgramBySlug(params.slug);
-  const program = (await getProgramFromSupabase(params.slug)) ?? fallback;
+  const { slug } = await params;
+  const fallback = getProgramBySlug(slug);
+  const program = (await getProgramFromSupabase(slug)) ?? fallback;
   if (!program) {
     return { title: "Program not found | Bridge Olutindo" };
   }
@@ -60,8 +61,9 @@ export async function generateMetadata({ params }: ProgramPageProps) {
 }
 
 export default async function ProgramDetailPage({ params }: ProgramPageProps) {
-  const fallback = getProgramBySlug(params.slug);
-  const program = (await getProgramFromSupabase(params.slug)) ?? fallback;
+  const { slug } = await params;
+  const fallback = getProgramBySlug(slug);
+  const program = (await getProgramFromSupabase(slug)) ?? fallback;
 
   if (!program) {
     notFound();
@@ -72,7 +74,7 @@ export default async function ProgramDetailPage({ params }: ProgramPageProps) {
   return (
     <div className="min-h-screen bg-background">
       <section className="border-b bg-slate-50/80">
-        <div className="container mx-auto px-4 py-16 md:py-24 space-y-6">
+        <div className="container mx-auto space-y-6 px-4 py-12 md:py-16">
           <SectionHeading
             eyebrow="Program"
             title={program.title}
@@ -100,17 +102,21 @@ export default async function ProgramDetailPage({ params }: ProgramPageProps) {
             ) : null}
           </div>
           <div className="flex flex-wrap gap-3">
-            <Button asChild className="bg-brand-red hover:bg-brand-red/90 rounded-full px-8">
+            <Button asChild className="h-11 rounded-xl px-5">
               <Link href={intakeHref}>Start intake</Link>
             </Button>
-            <Button asChild variant="outline" className="rounded-full px-8">
+            <Button asChild variant="secondary" className="h-11 rounded-xl px-5">
+              <Link href="/consultation">Book free consultation</Link>
+            </Button>
+            <Button asChild variant="outline" className="h-11 rounded-xl px-5">
               <Link href={`/checkout?program=${encodeURIComponent(program.title)}`}>Continue to checkout</Link>
             </Button>
           </div>
+          <p className="text-xs text-slate-500 md:text-sm">Apply first if you are new. Checkout is for approved or continuing applicants.</p>
         </div>
       </section>
 
-      <section className="py-16 md:py-20">
+      <section className="py-10 md:py-12">
         <div className="container mx-auto px-4 grid gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] items-start">
           <Card>
             <CardHeader>

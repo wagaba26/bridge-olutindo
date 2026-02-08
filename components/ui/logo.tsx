@@ -5,9 +5,10 @@ import { cn } from "@/lib/utils";
 interface LogoProps {
     className?: string; // Additional classes
     variant?: "light" | "dark"; // For potentially different backgrounds
+    wordmarkClassName?: string;
 }
 
-export function Logo({ className, variant = "dark" }: LogoProps) {
+export function Logo({ className, variant = "dark", wordmarkClassName = "hidden sm:inline-block" }: LogoProps) {
     return (
         <Link href="/" className={cn("flex items-center gap-2 font-bold text-xl tracking-tight hover:opacity-90 transition-opacity", className)}>
             <Image
@@ -18,8 +19,8 @@ export function Logo({ className, variant = "dark" }: LogoProps) {
                 className="object-contain"
                 priority
             />
-            <span className={cn("hidden sm:inline-block", variant === "light" ? "text-white" : "text-foreground")}>
-                Bridge<span className="text-brand-red">Olutindo</span>
+            <span className={cn(wordmarkClassName, variant === "light" ? "text-white" : "text-foreground")}>
+                Bridge<span className="text-primary">Olutindo</span>
             </span>
         </Link>
     );

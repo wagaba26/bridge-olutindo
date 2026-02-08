@@ -34,7 +34,7 @@ export function ServicePanel({ title, description, href, icon, theme, className,
         <Link
             href={href}
             className={cn(
-                "group relative flex flex-col justify-between p-6 md:p-8 rounded-xl border-2 transition-all duration-300 hover:shadow-lg overflow-hidden",
+                "group relative flex flex-col justify-between p-4 sm:p-6 md:p-8 rounded-xl border-2 transition-all duration-300 hover:shadow-lg overflow-hidden",
                 borderStyles[theme],
                 className
             )}
@@ -48,15 +48,15 @@ export function ServicePanel({ title, description, href, icon, theme, className,
             )}
 
             <div className="relative z-10">
-                <div className={cn("inline-flex p-3 rounded-lg mb-4 text-white shadow-sm", themeStyles[theme])}>
+                <div className={cn("inline-flex p-2 sm:p-3 rounded-lg mb-3 sm:mb-4 text-white shadow-sm", themeStyles[theme])}>
                     {icon}
                 </div>
-                <h3 className="text-2xl font-bold mb-2 group-hover:text-brand-red transition-colors dark:text-foreground">{title}</h3>
-                <p className="text-muted-foreground leading-relaxed mb-6">{description}</p>
+                <h3 className="text-lg sm:text-2xl font-bold mb-2 group-hover:text-brand-red transition-colors dark:text-foreground">{title}</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-4 sm:mb-6">{description}</p>
             </div>
 
             <div className="relative z-10 mt-auto">
-                <span className={cn("inline-flex items-center text-sm font-semibold group-hover:underline underline-offset-4 decoration-2",
+                <span className={cn("inline-flex items-center text-xs sm:text-sm font-semibold group-hover:underline underline-offset-4 decoration-2",
                     theme === 'red' ? 'text-brand-red' :
                         theme === 'blue' ? 'text-brand-blue' :
                             theme === 'orange' ? 'text-brand-orange' :

@@ -7,6 +7,7 @@ export type ProgramSummary = {
 };
 
 export const PROGRAMS: ProgramSummary[] = [
+  { title: "Japanese Language Program - JLCAT Preparation", slug: "jclat-preparation", focus: "learn" },
   { title: "N5 Evening Cohort", slug: "n5-evening-cohort", focus: "learn" },
   { title: "N5 Intensive Bootcamp", slug: "n5-intensive-bootcamp", focus: "learn" },
   { title: "N5 Online Weekend", slug: "n5-online-weekend", focus: "learn" },

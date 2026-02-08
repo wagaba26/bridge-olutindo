@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { COMPANY_PROFILE } from "@/lib/company-profile";
 
 export const metadata = {
   title: "About | Bridge Olutindo",
@@ -16,7 +18,7 @@ export default function AboutPage() {
           <SectionHeading
             eyebrow="About Bridge Olutindo"
             title="A bridge between Ugandan potential and Japanese opportunity."
-            description="Bridge Olutindo (Bridge4U) was created to give Ugandans a clear, trusted path to learn Japanese, work in Japan, and study at world-class institutions."
+            description={`${COMPANY_PROFILE.name} (${COMPANY_PROFILE.alias}), operated by ${COMPANY_PROFILE.parentCompany}, provides practical pathways across education, employment, business, and travel between Uganda and Japan.`}
           />
         </div>
       </section>
@@ -32,20 +34,18 @@ export default function AboutPage() {
                 saw how difficult it was to find reliable information, trustworthy intermediaries, and programs tailored
                 to Ugandan realities. Bridge Olutindo was born to change that.
               </p>
+              <p className="mt-3">
+                As shared on our Bridge4U profile, our direction is rooted in &ldquo;Okutambula Kulaba&rdquo; and spans education,
+                employment, business, and travel support between Uganda and Japan.
+              </p>
             </div>
             <div>
               <h3 className="mb-2">Mission</h3>
-              <p>
-                To prepare and connect Ugandans with ethical, sustainable opportunities in Japan—through language
-                education, career pathways, and study programs.
-              </p>
+              <p>{COMPANY_PROFILE.mission}</p>
             </div>
             <div>
               <h3 className="mb-2">Vision</h3>
-              <p>
-                A future where talented Ugandans confidently move between Kampala and Tokyo, building careers, learning,
-                and partnerships that uplift both countries.
-              </p>
+              <p>{COMPANY_PROFILE.vision}</p>
             </div>
           </div>
           <div className="space-y-4">
@@ -59,7 +59,21 @@ export default function AboutPage() {
               <CardContent className="space-y-3 text-sm text-muted-foreground">
                 <p>• Deep understanding of both Ugandan and Japanese systems.</p>
                 <p>• Programs covering language, jobs, and study in one ecosystem.</p>
+                <p>• Business consultancy support for Uganda-Japan collaboration.</p>
                 <p>• Emphasis on ethics, transparency, and long-term impact.</p>
+                <p>• Community channels and direct contact support via Bridge4U platforms.</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Parent company</CardTitle>
+                <CardDescription>Bridge is operated by KUMBA Co., Ltd.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm text-muted-foreground">
+                <p>KUMBA oversees the wider Bridge vision and supports service delivery quality across all pillars.</p>
+                <Link href={COMPANY_PROFILE.contact.kumbaLink} target="_blank" className="text-primary font-medium hover:underline">
+                  View KUMBA profile
+                </Link>
               </CardContent>
             </Card>
           </div>
@@ -101,32 +115,66 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Team grid placeholder */}
+      {/* Team */}
       <section className="py-16">
         <div className="container mx-auto px-4 space-y-8">
           <SectionHeading
             eyebrow="Team"
             title="People behind the bridge."
-            description="This section will highlight key team members and advisors across Uganda and Japan."
+            description="Bridge4U operates as a cross-border team with dedicated responsibilities in Uganda and Japan."
           />
           <div className="grid gap-6 md:grid-cols-3 text-sm text-muted-foreground">
-            {["Leadership", "Advisors", "Operations"].map((group) => (
-              <Card key={group}>
+            {[
+              {
+                title: "Leadership & Strategy",
+                body: `${COMPANY_PROFILE.contact.managerName} (${COMPANY_PROFILE.contact.managerRole}) leads cross-border execution and partner alignment under ${COMPANY_PROFILE.parentCompany}.`,
+              },
+              {
+                title: "Uganda Program Team",
+                body: "Handles learner support, applicant readiness, school/job preparation, and local coordination in Kampala.",
+              },
+              {
+                title: "Japan Partnerships Team",
+                body: "Coordinates schools, employers, and institutions in Japan to ensure smooth onboarding and continuity.",
+              },
+              {
+                title: "Education Desk",
+                body: "Supports Japanese language pathways and study planning, including scholarship and admissions guidance.",
+              },
+              {
+                title: "Employment & Business Desk",
+                body: "Supports career-track placement and Uganda-Japan business consultancy for organizations entering either market.",
+              },
+              {
+                title: "Community & Media",
+                body: "Runs Bridge communication channels and community engagement to keep applicants and partners informed.",
+              },
+            ].map((group) => (
+              <Card key={group.title}>
                 <CardHeader>
-                  <CardTitle>{group}</CardTitle>
+                  <CardTitle>{group.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p>
-                    Placeholder for names, roles, and short bios. This will help learners, parents, and partners see who
-                    is behind Bridge Olutindo.
-                  </p>
+                  <p>{group.body}</p>
                 </CardContent>
               </Card>
             ))}
           </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Leadership contact</CardTitle>
+              <CardDescription>Direct line for program and partnership coordination.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm text-muted-foreground">
+              <p className="font-medium text-foreground">{COMPANY_PROFILE.contact.managerName}</p>
+              <p>{COMPANY_PROFILE.contact.managerRole}</p>
+              <p>Uganda: {COMPANY_PROFILE.contact.ugandaPhone}</p>
+              <p>Japan / WhatsApp: {COMPANY_PROFILE.contact.japanPhoneWhatsApp}</p>
+              <p>Email: {COMPANY_PROFILE.contact.email}</p>
+            </CardContent>
+          </Card>
         </div>
       </section>
     </div>
   );
 }
-

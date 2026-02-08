@@ -1,5 +1,7 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Leads | Bridge Olutindo",
@@ -20,24 +22,34 @@ type LeadRecord = {
 };
 
 export default async function DashboardLeadsPage() {
-  const supabase = createSupabaseAdminClient();
+  const authClient = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await authClient.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const role = String((user.user_metadata?.primary_role ?? "")).toLowerCase().trim();
+  if (role !== "admin") {
+    redirect("/dashboard");
+  }
+
+  const supabase = await createSupabaseAdminClient();
   const leads: LeadRecord[] = [];
   let errorMessage: string | null = null;
 
-  if (!supabase) {
-    errorMessage = "Set SUPABASE_SERVICE_ROLE_KEY to view leads.";
-  } else {
-    const { data, error } = await supabase
-      .from("leads")
-      .select("id, created_at, type, full_name, email, phone, focus, organization")
-      .order("created_at", { ascending: false })
-      .limit(50);
+  const { data, error } = await supabase
+    .from("leads")
+    .select("id, created_at, type, full_name, email, phone, focus, organization")
+    .order("created_at", { ascending: false })
+    .limit(50);
 
-    if (error) {
-      errorMessage = "Unable to load leads from Supabase.";
-    } else if (data) {
-      leads.push(...(data as LeadRecord[]));
-    }
+  if (error) {
+    errorMessage = "Unable to load leads from Supabase.";
+  } else if (data) {
+    leads.push(...(data as LeadRecord[]));
   }
 
   return (

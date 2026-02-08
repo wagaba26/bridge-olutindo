@@ -1,134 +1,119 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { CircleUserRound } from "lucide-react";
+
+import { MobileDrawer } from "@/components/site/mobile-drawer";
 import { Button } from "@/components/ui/button";
-import {
-    NavigationMenu,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuList,
-    navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, User } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
-import { MAIN_NAV_ITEMS, SECONDARY_NAV_ITEMS } from "@/types/navigation";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { cn } from "@/lib/utils";
+import { MAIN_NAV_ITEMS } from "@/types/navigation";
 
 export function Header() {
-    const pathname = usePathname();
-    const [open, setOpen] = React.useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authResolved, setAuthResolved] = useState(false);
 
-    return (
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            {/* Top Utility Bar */}
-            <div className="hidden md:block bg-slate-900 text-white py-1 text-xs">
-                <div className="container mx-auto px-4 flex justify-between items-center h-8">
-                    <div className="flex gap-4">
-                        {/* Slogan or simplified tagline */}
-                        <span className="opacity-80">Connecting Uganda & Japan</span>
-                    </div>
-                    <div className="flex gap-6">
-                        {SECONDARY_NAV_ITEMS.map((item) => (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className="hover:text-brand-orange transition-colors"
-                            >
-                                {item.title}
-                            </Link>
-                        ))}
-                        {/* Language Switcher Placeholder */}
-                        <button className="hover:text-brand-orange transition-colors">EN</button>
-                    </div>
-                </div>
-            </div>
+  useEffect(() => {
+    const supabase = createSupabaseBrowserClient();
 
-            {/* Main Navigation Bar */}
-            <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-                <div className="flex items-center gap-8">
-                    <Logo />
+    supabase.auth.getSession().then(({ data }) => {
+      setIsAuthenticated(Boolean(data.session));
+      setAuthResolved(true);
+    });
 
-                    {/* Desktop Nav */}
-                    <div className="hidden lg:flex">
-                        <NavigationMenu>
-                            <NavigationMenuList>
-                                {MAIN_NAV_ITEMS.map((item) => (
-                                    <NavigationMenuItem key={item.title}>
-                                        <Link href={item.href} legacyBehavior passHref>
-                                            <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "bg-transparent text-base")}>
-                                                {item.title}
-                                            </NavigationMenuLink>
-                                        </Link>
-                                    </NavigationMenuItem>
-                                ))}
-                            </NavigationMenuList>
-                        </NavigationMenu>
-                    </div>
-                </div>
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(Boolean(session));
+      setAuthResolved(true);
+    });
 
-                <div className="flex items-center gap-4">
-                    {/* Mobile Menu Trigger */}
-                    <Sheet open={open} onOpenChange={setOpen}>
-                        <SheetTrigger asChild>
-                            <Button variant="ghost" size="icon" className="lg:hidden">
-                                <Menu className="h-6 w-6" />
-                                <span className="sr-only">Toggle menu</span>
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent side="left" className="w-[260px] sm:w-[320px] max-w-[80vw]">
-                            <div className="flex flex-col gap-6 mt-8">
-                                <Logo />
-                                <nav className="flex flex-col gap-4">
-                                    {MAIN_NAV_ITEMS.map((item) => (
-                                        <Link
-                                            key={item.href}
-                                            href={item.href}
-                                            className={cn(
-                                                "text-lg font-medium hover:text-brand-red transition-colors",
-                                                pathname === item.href && "text-brand-red"
-                                            )}
-                                            onClick={() => setOpen(false)}
-                                        >
-                                            {item.title}
-                                        </Link>
-                                    ))}
-                                    <hr className="my-2 border-border" />
-                                    {SECONDARY_NAV_ITEMS.map((item) => (
-                                        <Link
-                                            key={item.href}
-                                            href={item.href}
-                                            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                                            onClick={() => setOpen(false)}
-                                        >
-                                            {item.title}
-                                        </Link>
-                                    ))}
-                                </nav>
-                                <div className="flex flex-col gap-2 mt-auto">
-                                    <Button asChild variant="outline" className="w-full justify-start gap-2">
-                                        <Link href="/login"><User className="w-4 h-4" /> Log In</Link>
-                                    </Button>
-                                    <Button asChild className="w-full bg-brand-red hover:bg-brand-red/90 text-white">
-                                        <Link href="/intake">Get Started</Link>
-                                    </Button>
-                                </div>
-                            </div>
-                        </SheetContent>
-                    </Sheet>
+    return () => subscription.unsubscribe();
+  }, []);
 
-                    <div className="hidden lg:flex items-center gap-2">
-                        <Button asChild variant="ghost" className="gap-2">
-                            <Link href="/login"><User className="w-4 h-4" /> Log In</Link>
-                        </Button>
-                        <Button asChild className="bg-brand-red hover:bg-brand-red/90 text-white rounded-full px-6">
-                            <Link href="/intake">Get Started</Link>
-                        </Button>
-                    </div>
-                </div>
-            </div>
-        </header>
-    );
+  async function handleSignOut() {
+    const supabase = createSupabaseBrowserClient();
+    await supabase.auth.signOut();
+    setIsAuthenticated(false);
+    router.push("/");
+    router.refresh();
+  }
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur">
+      <div className="container mx-auto flex h-16 items-center gap-3 px-4 lg:h-[72px]">
+        <div className="lg:hidden">
+          <MobileDrawer isAuthenticated={isAuthenticated} authResolved={authResolved} onSignOut={handleSignOut} />
+        </div>
+
+        <Logo className="shrink-0" wordmarkClassName="hidden lg:inline-block" />
+
+        <nav className="ml-8 hidden items-center gap-1 lg:flex">
+          {MAIN_NAV_ITEMS.map((item) => {
+            const active = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "rounded-full px-3 py-2 text-sm font-medium transition",
+                  active
+                    ? "bg-slate-900 text-white"
+                    : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+                )}
+              >
+                {item.title}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="ml-auto flex items-center gap-2">
+          <Button asChild variant="ghost" className="hidden h-11 rounded-xl px-4 lg:inline-flex">
+            <Link href="/about">About</Link>
+          </Button>
+          <Button asChild variant="ghost" className="hidden h-11 rounded-xl px-4 lg:inline-flex">
+            <Link href="/contact">Contact</Link>
+          </Button>
+          {!authResolved ? (
+            <div className="h-11 w-28 rounded-xl bg-slate-100" />
+          ) : isAuthenticated ? (
+            <>
+              <Button asChild className="h-11 rounded-xl bg-slate-900 px-4 text-sm text-white shadow-sm hover:bg-slate-800 lg:hidden">
+                <Link href="/dashboard">My Account</Link>
+              </Button>
+              <Button asChild variant="ghost" className="hidden h-11 rounded-xl px-4 lg:inline-flex">
+                <Link href="/dashboard" className="inline-flex items-center gap-2">
+                  <CircleUserRound className="size-4" />
+                  My Account
+                </Link>
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="hidden h-11 rounded-xl px-4 lg:inline-flex"
+                onClick={handleSignOut}
+              >
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button asChild variant="ghost" className="hidden h-11 rounded-xl px-4 lg:inline-flex">
+                <Link href="/login">Log In</Link>
+              </Button>
+              <Button asChild className="h-11 rounded-xl bg-slate-900 px-4 text-sm text-white shadow-sm hover:bg-slate-800">
+                <Link href="/intake">Get Started</Link>
+              </Button>
+            </>
+          )}
+        </div>
+      </div>
+    </header>
+  );
 }

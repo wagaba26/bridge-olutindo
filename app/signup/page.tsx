@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,15 @@ export default function SignupPage() {
   const [isOAuthLoading, setIsOAuthLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
+
+  useEffect(() => {
+    const supabase = createSupabaseBrowserClient();
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) {
+        router.replace("/dashboard");
+      }
+    });
+  }, [router]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -49,7 +59,7 @@ export default function SignupPage() {
 
       setInfo("Account created. Please check your email to confirm your address before logging in.");
       setIsLoading(false);
-    } catch (_err) {
+    } catch {
       setError("Something went wrong while creating your account. Please try again.");
       setIsLoading(false);
     }
@@ -72,16 +82,16 @@ export default function SignupPage() {
         setError(oauthError.message);
         setIsOAuthLoading(false);
       }
-    } catch (_err) {
+    } catch {
       setError("Something went wrong while starting Google sign-in.");
       setIsOAuthLoading(false);
     }
   }
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-slate-50/80 px-4 py-12">
+    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-slate-50/80 px-4 py-8 md:py-12">
       <FadeIn>
-        <Card className="w-full max-w-md shadow-lg border border-slate-200">
+        <Card className="w-full max-w-md border border-slate-200 shadow-lg">
           <CardHeader className="space-y-2">
             <SectionHeading
               eyebrow="Account"
@@ -97,7 +107,7 @@ export default function SignupPage() {
                 <label className="font-medium" htmlFor="name">
                   Full name
                 </label>
-                <Input id="name" name="name" placeholder="Your name" required />
+                <Input id="name" name="name" placeholder="Your name" className="h-10 rounded-xl" required />
               </div>
               <div className="space-y-1 text-sm">
                 <label className="font-medium" htmlFor="email">
@@ -108,6 +118,7 @@ export default function SignupPage() {
                   name="email"
                   type="email"
                   placeholder="you@example.com"
+                  className="h-10 rounded-xl"
                   required
                 />
               </div>
@@ -120,6 +131,7 @@ export default function SignupPage() {
                   name="password"
                   type="password"
                   placeholder="••••••••"
+                  className="h-10 rounded-xl"
                   required
                 />
               </div>
@@ -131,23 +143,26 @@ export default function SignupPage() {
                   id="role"
                   name="role"
                   placeholder="Student / Job seeker / Partner / Other"
+                  className="h-10 rounded-xl"
                 />
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Already have an account?{" "}
+                <Link href="/login" className="font-medium text-slate-700 underline-offset-4 hover:underline">
+                  Log in
+                </Link>
               </div>
               {error && <p className="text-xs text-red-500">{error}</p>}
               {info && <p className="text-xs text-emerald-600">{info}</p>}
             </CardContent>
             <CardFooter className="flex flex-col gap-3">
-              <Button
-                type="submit"
-                className="w-full bg-brand-red hover:bg-brand-red/90 text-white"
-                disabled={isLoading}
-              >
+              <Button type="submit" className="h-10 w-full rounded-xl" disabled={isLoading}>
                 {isLoading ? "Creating account..." : "Create account"}
               </Button>
               <Button
                 type="button"
-                variant="outline"
-                className="w-full"
+                variant="secondary"
+                className="h-10 w-full rounded-xl"
                 onClick={handleGoogleSignIn}
                 disabled={isOAuthLoading}
               >
