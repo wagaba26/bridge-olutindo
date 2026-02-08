@@ -15,10 +15,17 @@ import { MAIN_NAV_ITEMS } from "@/types/navigation";
 export function Header() {
   const pathname = usePathname();
   const router = useRouter();
+  const authEnabled =
+    Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL) &&
+    Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [authResolved, setAuthResolved] = useState(false);
+  const [authResolved, setAuthResolved] = useState(!authEnabled);
 
   useEffect(() => {
+    if (!authEnabled) {
+      return;
+    }
+
     const supabase = createSupabaseBrowserClient();
 
     supabase.auth.getSession().then(({ data }) => {
@@ -34,10 +41,20 @@ export function Header() {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [authEnabled]);
 
   async function handleSignOut() {
-    const supabase = createSupabaseBrowserClient();
+    let supabase;
+    try {
+      supabase = createSupabaseBrowserClient();
+    } catch {
+      setIsAuthenticated(false);
+      setAuthResolved(true);
+      router.push("/");
+      router.refresh();
+      return;
+    }
+
     await supabase.auth.signOut();
     setIsAuthenticated(false);
     router.push("/");
