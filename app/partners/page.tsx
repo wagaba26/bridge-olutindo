@@ -675,12 +675,18 @@ export default function PartnersPage() {
       </section>
 
       {showPartnerPrompt ? (
-        <div className="fixed inset-x-3 bottom-3 z-[70] sm:inset-x-auto sm:right-4 sm:w-[min(30rem,calc(100vw-2rem))]">
-          <div role="dialog" aria-modal="false" aria-label={copy.newsletterEyebrow} className="relative w-full border border-slate-300 bg-white px-5 pb-5 pt-14 sm:px-6">
+        <div className="fixed inset-x-3 bottom-3 z-[70] sm:inset-x-auto sm:right-4 sm:w-[min(32rem,calc(100vw-2rem))]">
+          <div
+            role="dialog"
+            aria-modal="false"
+            aria-label={copy.newsletterEyebrow}
+            className="relative w-full border-2 border-black bg-white px-5 pb-5 pt-14 outline outline-1 outline-slate-300 sm:px-6"
+          >
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-1 border-b border-black bg-slate-200" aria-hidden="true" />
             <button
               type="button"
               aria-label={copy.popupClose}
-              className="absolute right-2 top-2 inline-flex h-12 w-12 items-center justify-center border border-slate-300 text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              className="absolute right-2 top-2 inline-flex h-12 w-12 items-center justify-center border border-black text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
               onClick={() => dismissPartnerPromptWithTracking("close-icon")}
             >
               <X className="size-7" />
@@ -731,7 +737,7 @@ export default function PartnersPage() {
         <div className="fixed inset-x-3 bottom-3 z-[65] sm:inset-x-auto sm:right-4">
           <button
             type="button"
-            className="h-12 w-full border border-black bg-white px-4 text-left text-sm font-semibold text-black hover:bg-neutral-100 sm:w-auto sm:min-w-[260px]"
+            className="h-12 w-full border-2 border-black bg-white px-4 text-left text-sm font-semibold text-black outline outline-1 outline-slate-300 hover:bg-neutral-100 sm:w-auto sm:min-w-[260px]"
             onClick={openPartnerPromptFromChip}
           >
             {promptChipLabel}

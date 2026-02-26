@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { useSiteLanguage } from "@/components/site/language-provider";
+import { StudyBuddies } from "@/components/site/study-buddies";
 import { FadeIn } from "@/components/ui/fade-in";
 import { Button } from "@/components/ui/button";
 
@@ -18,7 +19,7 @@ const COPY = {
     sectionA: "Program focus",
     sectionATitle: "What this self-study track covers",
     sectionABody:
-      "Use this path when you need a reliable routine outside live classes. It is designed for mobile-first study and short, repeatable sessions.",
+      "Use this path when you need a reliable routine outside live classes. It is designed for daily study and short, repeatable sessions.",
     tracks: [
       {
         title: "N5 Foundation",
@@ -98,6 +99,12 @@ const COPY = {
 export default function SelfStudyPage() {
   const { locale } = useSiteLanguage();
   const copy = COPY[locale];
+  const assistantLabel =
+    locale === "ja" ? "\u5b66\u7fd2\u30a2\u30b7\u30b9\u30bf\u30f3\u30c8" : "Study assistants";
+  const assistantBody =
+    locale === "ja"
+      ? "\u6bce\u65e5\u306e\u30af\u30a4\u30ba\u524d\u306b\u3001\u77ed\u3044\u767a\u8a71\u30fb\u8074\u89e3\u30eb\u30fc\u30d7\u3067\u8abf\u5b50\u3092\u6574\u3048\u307e\u3057\u3087\u3046\u3002"
+      : "Use both assistants for short speaking and listening loops before each quiz round.";
 
   return (
     <div className="min-h-screen bg-white">
@@ -118,6 +125,13 @@ export default function SelfStudyPage() {
                 <Button asChild variant="outline" className="h-11 rounded-xl px-5">
                   <Link href="/intake?focus=learn">{copy.ctaC}</Link>
                 </Button>
+              </div>
+              <div className="grid gap-3 border border-slate-300 bg-slate-50 p-4 md:grid-cols-[auto_1fr] md:items-center md:p-5">
+                <StudyBuddies className="justify-center grayscale md:justify-start" />
+                <div>
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-slate-600">{assistantLabel}</p>
+                  <p className="mt-2 text-sm leading-7 text-slate-600">{assistantBody}</p>
+                </div>
               </div>
             </div>
           </FadeIn>

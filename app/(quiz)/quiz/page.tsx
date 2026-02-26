@@ -40,7 +40,7 @@ const COPY = {
     title: "Speak, listen, and read in Japanese",
     body:
       "Short drills with immediate feedback. Use this page for fast daily reps, then continue with self-study for weekly progression.",
-    chips: ["Mobile-first drill flow", "Pronunciation correction", "Listening and reading accuracy"],
+    chips: ["Daily drill flow", "Pronunciation correction", "Listening and reading accuracy"],
     levelLabel: "Select level",
     panelTitle: "How to use this quiz effectively",
     panelItems: [
