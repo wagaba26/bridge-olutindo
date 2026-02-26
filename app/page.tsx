@@ -186,23 +186,23 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       <section className="border-b border-black bg-white pt-0 md:pt-10">
         <div className="container mx-auto">
-          <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:gap-10">
+          <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr] lg:gap-10">
             <FadeIn delay={0.04} className="order-1 lg:order-2">
               <div className="-mx-4 -mt-px border-y border-black bg-neutral-50 md:mx-0 md:mt-0 md:border md:border-black">
-                <div className="h-[210px] bg-neutral-50 md:h-[360px] lg:h-[420px]" />
+                <div className="h-[clamp(96px,20vh,150px)] bg-neutral-50 md:h-[360px] lg:h-[420px]" />
               </div>
             </FadeIn>
 
-            <FadeIn className="order-2 pb-8 pt-1 text-left md:pt-10 lg:order-1 lg:pb-12">
+            <FadeIn className="order-2 pb-8 pt-2 text-left md:pt-10 lg:order-1 lg:pb-12">
               <div className="space-y-4">
                 <p className="text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-neutral-600">{copy.heroKicker}</p>
-                <h1 className="max-w-[15ch] text-balance text-[clamp(1.75rem,9.4vw,2.85rem)] leading-[0.96] tracking-[-0.02em] md:hidden">
+                <h1 className="max-w-[13.5ch] text-balance text-[clamp(1.7rem,8.1vw,2.45rem)] leading-[0.98] tracking-[-0.02em] md:hidden">
                   {copy.heroTitleMobile}
                 </h1>
                 <h1 className="hidden max-w-3xl text-balance text-[clamp(2.6rem,5.2vw,4.2rem)] leading-[0.95] tracking-[-0.02em] md:block">
                   {copy.heroTitle}
                 </h1>
-                <p className="max-w-[34ch] text-[0.92rem] leading-7 text-neutral-600 md:hidden">
+                <p className="max-w-[33ch] text-[0.92rem] leading-[1.75] text-neutral-600 md:hidden">
                   {copy.heroBodyMobile}
                 </p>
                 <p className="hidden max-w-xl text-[0.98rem] leading-7 text-neutral-600 md:block">
