@@ -214,6 +214,7 @@ export default function AboutPage() {
         description={copy.description}
         chips={copy.chips}
         compact
+        hideVisualPanel
         scenes={[
           { src: "/images/hero/contextual/pathway-counseling.jpg", label: "Bridge", caption: "Cross-border coordination and operating flow" },
           { src: "/images/partners/partners-hero.jpg", label: "Partners", caption: "Institutional collaboration for long-term outcomes" },
