@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CircleUserRound } from "lucide-react";
@@ -9,16 +8,12 @@ import { CircleUserRound } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { LanguageToggle } from "@/components/site/language-toggle";
 import { useSiteLanguage } from "@/components/site/language-provider";
+import { MobileDrawer } from "@/components/site/mobile-drawer";
 import { Button } from "@/components/ui/button";
 import { tNav } from "@/lib/i18n";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { MAIN_NAV_ITEMS } from "@/types/navigation";
-
-const MobileDrawer = dynamic(
-  () => import("@/components/site/mobile-drawer").then((module) => module.MobileDrawer),
-  { ssr: false }
-);
 
 export function Header() {
   const pathname = usePathname();
