@@ -41,33 +41,67 @@ const COPY = {
     phase1: "Launched initial Japanese language cohorts in Uganda with structured class pathways.",
     phase2: "Expanded institutional collaboration and practical planning support for cross-border education.",
     phase3: "Introduced broader advisory services across study planning and Uganda-Japan business coordination.",
-    teamEyebrow: "Team",
-    teamTitle: "People behind the bridge.",
-    teamBody: "Bridge Olutindo operates as a cross-border team with dedicated responsibilities in Uganda and Japan.",
-    groups: [
+    teamEyebrow: "Leadership",
+    teamTitle: "Leadership team and operating units.",
+    teamBody:
+      "Bridge Olutindo's leadership is headed by Ssenkumba Jacob (CEO, KUMBA Corporation), with cross-border execution managed across Uganda and Japan.",
+    imageSlotLabel: "Image slot",
+    members: [
       {
-        title: "Leadership & Strategy",
-        body: `${COMPANY_PROFILE.contact.managerName} (${COMPANY_PROFILE.contact.managerRole}) leads cross-border execution and partner alignment under ${COMPANY_PROFILE.parentCompany}.`,
+        name: "SSENKUMBA JACOB",
+        role: "Chief Executive Officer, KUMBA Corporation",
+        body: "Ssenkumba Jacob is the overall head of the leadership structure and provides strategic direction for BRIDGE operations and long-term Uganda-Japan growth.",
       },
       {
+        name: COMPANY_PROFILE.contact.managerName,
+        role: `${COMPANY_PROFILE.contact.managerRole}, BRIDGE`,
+        body: `${COMPANY_PROFILE.contact.managerName} serves as General Manager and leads day-to-day cross-border delivery, partner execution, and quality control under ${COMPANY_PROFILE.parentCompany}.`,
+      },
+      {
+        name: "Mr. Wagaba Emmanuel",
+        role: "Country Manager, Uganda",
+        body: "Mr. Wagaba Emmanuel is the Country Manager for BRIDGE in Uganda, specializing in social work, program coordination, and digital marketing. He established the organization's first African office and leads stakeholder coordination and growth execution.",
+      },
+      {
+        name: "Mr. Sebadduka Ronald",
+        role: "Human Resource Manager",
+        body: "Mr. Sebadduka Ronald is the Human Resource Manager and partner focused on organizational growth and employee development. Based in Fukuoka, he supports a strong and efficient team structure across operations.",
+      },
+    ],
+    ceoEyebrow: "CEO Message",
+    ceoTitle: "Message from the CEO",
+    ceoLead:
+      "At KUMBA Corporation, we strive to serve as a bridge connecting Japan and the world. Our diverse activities include foreign language education, international exchange events, music performances, the \"BRIDGE\" project, and the promotion of fair trade coffee.",
+    ceoBody:
+      "Through music, travel, business support, and sustainable practices like fair trade coffee, we aim to foster connections that transcend cultural boundaries and contribute to a brighter, more sustainable future for all. We will continue to work tirelessly to meet your expectations and make a positive impact.",
+    ceoCompany: "KUMBA Corporation",
+    ceoRole: "CEO",
+    ceoName: "SSENKUMBA JACOB",
+    unitsTitle: "Program and support units",
+    groups: [
+      {
         title: "Uganda Program Team",
-        body: "Handles learner support, applicant readiness, language and study preparation, and local coordination in Kampala.",
+        body: "Learner support, applicant readiness, language and study preparation, and local coordination in Kampala.",
       },
       {
         title: "Japan Partnerships Team",
-        body: "Coordinates schools and institutions in Japan to ensure smooth onboarding and continuity.",
+        body: "Coordination with schools and institutions in Japan for onboarding, continuity, and partner communication.",
       },
       {
         title: "Education Desk",
-        body: "Supports language pathways and study planning, including scholarship and admissions guidance.",
+        body: "Language pathways and study planning support, including scholarship and admissions guidance.",
       },
       {
         title: "Business Desk",
-        body: "Supports Uganda-Japan business advisory engagements and program structuring for institutional partners.",
+        body: "Uganda-Japan business advisory support and program structuring for institutional and private-sector partners.",
       },
       {
         title: "Community & Media",
-        body: "Runs communication channels and community engagement to keep applicants and partners informed.",
+        body: "Public communication, awareness content, and community engagement for learners and partners.",
+      },
+      {
+        title: "Operations Support",
+        body: "Cross-functional execution support across documents, partner timelines, and service quality control.",
       },
     ],
   },
@@ -102,33 +136,67 @@ const COPY = {
     phase1: "ウガンダで日本語コホートを開始し、段階型学習フローを整備。",
     phase2: "教育機関連携を拡張し、越境進学支援の運用設計を強化。",
     phase3: "留学計画に加え、ウガンダ・日本間の事業連携支援を拡充。",
-    teamEyebrow: "チーム",
-    teamTitle: "この橋を支えるメンバー。",
-    teamBody: "Bridge Olutindoは、ウガンダと日本の両拠点で役割分担された越境チームで運営しています。",
-    groups: [
+    teamEyebrow: "リーダーシップ",
+    teamTitle: "経営チームと運用体制。",
+    teamBody:
+      "Bridge Olutindoは、KUMBA株式会社CEOのSSENKUMBA JACOB氏をトップとし、ウガンダと日本の越境体制で教育・連携支援を実行しています。",
+    imageSlotLabel: "画像差し替え枠",
+    members: [
       {
-        title: "戦略・統括",
-        body: `${COMPANY_PROFILE.contact.managerName}（${COMPANY_PROFILE.contact.managerRole}）が、${COMPANY_PROFILE.parentCompany}の運営方針のもとで越境実行と提携運用を統括します。`,
+        name: "SSENKUMBA JACOB",
+        role: "Chief Executive Officer, KUMBA Corporation",
+        body: "SSENKUMBA JACOB氏はリーダーシップ体制の最高責任者として、BRIDGEの戦略方針とウガンダ・日本間の中長期成長を統括します。",
       },
+      {
+        name: COMPANY_PROFILE.contact.managerName,
+        role: `${COMPANY_PROFILE.contact.managerRole}（BRIDGE）`,
+        body: `${COMPANY_PROFILE.contact.managerName}はゼネラルマネージャーとして、${COMPANY_PROFILE.parentCompany}の運営方針に基づき、日々の越境実行、提携運用、品質管理を統括します。`,
+      },
+      {
+        name: "Mr. Wagaba Emmanuel",
+        role: "Country Manager, Uganda",
+        body: "ワガバ・エマニュエル氏は、BRIDGEウガンダのカントリーマネージャーとして、ソーシャルワーク、プログラム調整、デジタルマーケティングに精通しています。アフリカ初のオフィス設立を主導し、関係者連携と運用成長を推進しています。",
+      },
+      {
+        name: "Mr. Sebadduka Ronald",
+        role: "Human Resource Manager",
+        body: "セバドゥカ・ロナルド氏は、人事マネージャー兼パートナーとして、組織の成長と人材育成を担っています。福岡拠点での専門知見を活かし、強く効率的なチーム体制づくりを支えています。",
+      },
+    ],
+    ceoEyebrow: "CEOメッセージ",
+    ceoTitle: "代表メッセージ",
+    ceoLead:
+      "KUMBA株式会社は、日本と世界をつなぐ架け橋として、外国語教育、国際交流イベント、音楽活動、「BRIDGE」プロジェクト、そしてフェアトレードコーヒーの普及など、多様な取り組みを行っています。",
+    ceoBody:
+      "音楽、旅、ビジネス支援、フェアトレードコーヒーのような持続可能な実践を通じて、文化の境界を越えるつながりを育み、より明るく持続可能な未来に貢献していきます。これからも皆さまの期待に応え、社会に前向きな価値を生み出すために尽力してまいります。",
+    ceoCompany: "KUMBA株式会社",
+    ceoRole: "代表取締役社長",
+    ceoName: "SSENKUMBA JACOB",
+    unitsTitle: "プログラム・運用ユニット",
+    groups: [
       {
         title: "ウガンダ運営チーム",
         body: "学習者支援、出願準備、日本語・留学準備、カンパラ現地調整を担当します。",
       },
       {
         title: "日本提携チーム",
-        body: "日本側の学校・機関との連携調整と受け入れ導線を担当します。",
+        body: "日本側の学校・機関との連携調整、受け入れ導線、提携先コミュニケーションを担当します。",
       },
       {
         title: "教育デスク",
-        body: "語学パスウェイと進学計画、奨学金・出願に関する実務支援を担当します。",
+        body: "語学パスウェイと進学計画支援、奨学金・出願に関する実務を担当します。",
       },
       {
         title: "ビジネスデスク",
-        body: "ウガンダ・日本間の事業連携や機関向け運用設計を支援します。",
+        body: "ウガンダ・日本間の事業連携支援と、機関・民間向けの運用設計を担当します。",
       },
       {
         title: "コミュニティ・メディア",
-        body: "情報発信とコミュニティ連携を通じて、学習者・機関双方の意思決定を支援します。",
+        body: "情報発信、認知向上コンテンツ、コミュニティ連携を通じて意思決定を支援します。",
+      },
+      {
+        title: "オペレーションサポート",
+        body: "書類、提携進行、サービス品質管理など、横断的な実行支援を担当します。",
       },
     ],
   },
@@ -145,6 +213,7 @@ export default function AboutPage() {
         title={copy.title}
         description={copy.description}
         chips={copy.chips}
+        compact
         scenes={[
           { src: "/images/hero/contextual/pathway-counseling.jpg", label: "Bridge", caption: "Cross-border coordination and operating flow" },
           { src: "/images/partners/partners-hero.jpg", label: "Partners", caption: "Institutional collaboration for long-term outcomes" },
@@ -247,6 +316,51 @@ export default function AboutPage() {
               description={copy.teamBody}
             />
           </FadeIn>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {copy.members.map((member, index) => (
+              <FadeIn key={member.name} delay={0.03 * (index % 4)}>
+                <Card className="h-full">
+                  <CardContent className="space-y-4 pt-6">
+                    <div className="flex aspect-[4/3] items-center justify-center rounded-xl border border-slate-300 bg-slate-50 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                      {copy.imageSlotLabel}
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-slate-900">{member.name}</h3>
+                      <p className="mt-1 text-sm font-semibold text-brand-700">{member.role}</p>
+                      <p className="mt-3 text-sm text-slate-700">{member.body}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </FadeIn>
+            ))}
+          </div>
+          <FadeIn delay={0.05}>
+            <Card>
+              <CardHeader>
+                <CardDescription>{copy.ceoEyebrow}</CardDescription>
+                <CardTitle>{copy.ceoTitle}</CardTitle>
+              </CardHeader>
+              <CardContent className="grid gap-6 md:grid-cols-[minmax(0,1fr)_220px]">
+                <div className="space-y-4 text-sm text-slate-700">
+                  <p>{copy.ceoLead}</p>
+                  <p>{copy.ceoBody}</p>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex aspect-[4/5] items-center justify-center rounded-xl border border-slate-300 bg-slate-50 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                    {copy.imageSlotLabel}
+                  </div>
+                  <div className="text-right text-sm text-slate-700">
+                    <p className="font-semibold text-slate-900">{copy.ceoCompany}</p>
+                    <p>{copy.ceoRole}</p>
+                    <p className="font-semibold">{copy.ceoName}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </FadeIn>
+          <div className="space-y-2">
+            <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-600">{copy.unitsTitle}</h3>
+          </div>
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {copy.groups.map((group, index) => (
               <FadeIn key={group.title} delay={0.03 * (index % 5)}>

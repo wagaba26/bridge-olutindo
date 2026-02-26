@@ -58,7 +58,7 @@ export function PageHero({
     <section className={`relative overflow-hidden border-b border-slate-300/70 bg-white ${sectionSpacing}`}>
       <div
         className={`container mx-auto grid gap-6 px-4 ${containerSpacing} ${
-          hideVisualPanel ? "" : "md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:items-end"
+          hideVisualPanel ? "" : "md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:items-start"
         }`}
       >
         {mobileImageFirst && primaryScene ? (
