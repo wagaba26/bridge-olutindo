@@ -25,11 +25,7 @@ export async function POST(request: Request) {
   const { email } = parsed.data;
 
   const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.auth.resend({ type: "signup", email });
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
-  }
+  await supabase.auth.resend({ type: "signup", email });
 
   return NextResponse.json({ success: true });
 }

@@ -18,6 +18,9 @@ const progressSchema = z.object({
   attendanceStatus: z.enum(["present", "late", "absent", "excused"]),
   classDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   teacherComment: z.string().min(2).max(2000),
+  engagementRating: z.coerce.number().int().min(1).max(5),
+  pronunciationRating: z.coerce.number().int().min(1).max(5),
+  homeworkRating: z.coerce.number().int().min(1).max(5),
 });
 
 export async function POST(request: Request) {
@@ -47,13 +50,16 @@ export async function POST(request: Request) {
     attendanceStatus: String(formData.get("attendance_status") ?? "").trim(),
     classDate: String(formData.get("class_date") ?? "").trim(),
     teacherComment: String(formData.get("teacher_comment") ?? "").trim(),
+    engagementRating: String(formData.get("engagement_rating") ?? "4").trim(),
+    pronunciationRating: String(formData.get("pronunciation_rating") ?? "4").trim(),
+    homeworkRating: String(formData.get("homework_rating") ?? "4").trim(),
   });
 
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid progress payload." }, { status: 400 });
   }
 
-  const { learnerEmail, attendanceStatus, classDate, teacherComment } = parsed.data;
+  const { learnerEmail, attendanceStatus, classDate, teacherComment, engagementRating, pronunciationRating, homeworkRating } = parsed.data;
 
   const db = await createSupabaseAdminOrServerClient();
   const { error } = await db.from("learner_progress_updates").insert({
@@ -61,6 +67,9 @@ export async function POST(request: Request) {
     attendance_status: attendanceStatus,
     class_date: classDate,
     teacher_comment: teacherComment,
+    engagement_rating: engagementRating,
+    pronunciation_rating: pronunciationRating,
+    homework_rating: homeworkRating,
     submitted_by: user.id,
     submitted_by_role: role,
   });
@@ -77,7 +86,7 @@ export async function POST(request: Request) {
 
   const { data: recentUpdates } = await db
     .from("learner_progress_updates")
-    .select("attendance_status, teacher_comment, class_date")
+    .select("attendance_status, teacher_comment, class_date, engagement_rating, pronunciation_rating, homework_rating")
     .eq("learner_email", learnerEmail)
     .order("class_date", { ascending: false })
     .limit(30);
@@ -95,9 +104,18 @@ export async function POST(request: Request) {
         return total + Math.min(length, 180) / 180;
       }, 0) / recentUpdates.length;
 
+    const ratingAverage =
+      recentUpdates.reduce((total, item) => {
+        const engagement = Number(item.engagement_rating ?? 3);
+        const pronunciation = Number(item.pronunciation_rating ?? 3);
+        const homework = Number(item.homework_rating ?? 3);
+        return total + (engagement + pronunciation + homework) / 3;
+      }, 0) / recentUpdates.length;
+
     const attendanceRate = Math.round(attendanceAverage * 100);
     const feedbackScore = Math.round(commentAverage * 100);
-    const progressScore = Math.round(attendanceRate * 0.7 + feedbackScore * 0.3);
+    const overallTeacherRating = Number(ratingAverage.toFixed(1));
+    const progressScore = Math.round(attendanceRate * 0.55 + feedbackScore * 0.2 + overallTeacherRating * 5);
     const latestDate = String(recentUpdates[0].class_date ?? classDate);
 
     await db.from("learner_progress_summaries").upsert(
@@ -106,6 +124,7 @@ export async function POST(request: Request) {
         attendance_rate: attendanceRate,
         feedback_score: feedbackScore,
         progress_score: progressScore,
+        overall_teacher_rating: overallTeacherRating,
         last_class_date: latestDate,
         updated_at: new Date().toISOString(),
       },
@@ -123,6 +142,9 @@ export async function POST(request: Request) {
         attendance_status: attendanceStatus,
         class_date: classDate,
         comment_length: teacherComment.length,
+        engagement_rating: engagementRating,
+        pronunciation_rating: pronunciationRating,
+        homework_rating: homeworkRating,
       },
     });
   } catch {

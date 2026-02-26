@@ -3,11 +3,10 @@ import { google } from "googleapis";
 const DEFAULT_TIMEZONE = "Africa/Kampala";
 export const DEFAULT_CONSULTATION_SLOTS = ["09:00", "10:30", "12:00", "14:00", "15:30", "17:00"];
 
-type DeskKey = "language" | "jobs" | "study" | "partners" | "business";
+type DeskKey = "language" | "study" | "partners" | "business";
 
 const CALENDAR_ENV_BY_DESK: Record<DeskKey, string> = {
   language: "GOOGLE_CALENDAR_ID_LANGUAGE",
-  jobs: "GOOGLE_CALENDAR_ID_JOBS",
   study: "GOOGLE_CALENDAR_ID_STUDY",
   partners: "GOOGLE_CALENDAR_ID_PARTNERS",
   business: "GOOGLE_CALENDAR_ID_BUSINESS",

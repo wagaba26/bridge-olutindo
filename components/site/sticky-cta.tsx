@@ -12,7 +12,8 @@ export function StickyCTA({
   secondaryHref?: string;
 }) {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 p-3 backdrop-blur md:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-300/80 bg-white/95 p-3 backdrop-blur md:hidden">
+      <p className="mx-auto mb-2 max-w-md text-center text-[11px] font-medium text-slate-500">Quick next step. No obligation.</p>
       <div className="mx-auto flex max-w-md gap-2">
         {secondaryLabel && secondaryHref && (
           <Link
@@ -24,7 +25,7 @@ export function StickyCTA({
         )}
         <Link
           href={primaryHref}
-          className="inline-flex h-11 flex-1 items-center justify-center rounded-xl bg-slate-900 px-3 text-sm font-semibold text-white"
+          className="inline-flex h-11 flex-1 items-center justify-center rounded-xl bg-brand-700 px-3 text-sm font-semibold text-white"
         >
           {primaryLabel}
         </Link>

@@ -37,9 +37,9 @@ export function AccountNav({ links }: AccountNavProps) {
               href={link.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "inline-flex items-center rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-colors md:w-full md:justify-between",
+                "inline-flex items-center rounded-xl border px-3 py-2 text-xs font-medium transition-colors md:w-full md:justify-between",
                 active
-                  ? "border-primary/30 bg-primary/10 text-slate-900"
+                  ? "border-brand-600/35 bg-brand-600/10 text-slate-900"
                   : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-100"
               )}
             >

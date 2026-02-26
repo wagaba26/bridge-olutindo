@@ -15,7 +15,6 @@ Validate user flow clarity, form logic, auth behavior, and cross-route consisten
 - Confirm selected focus updates helper text, message placeholder, and next-step panel.
 - Confirm conditional fields appear by focus:
   - `learn`: preferred start, payment plan
-  - `jobs`: role category, JLPT
   - `study`: target intake, education status
   - `partners`: organization, partnership model
 - Submit each focus path and verify lead record stores matching metadata.

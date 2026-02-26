@@ -38,12 +38,12 @@ export function ProgramCard({
   className,
 }: ProgramCardProps) {
   return (
-    <Card className={cn("h-full", className)}>
+    <Card className={cn("h-full border-slate-200/90 bg-white", className)}>
       <CardHeader>
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-2">
             {badge && (
-              <Badge variant="outline" className="border-brand-orange text-brand-orange">
+              <Badge variant="outline" className="border-brand-orange bg-amber-50 text-amber-800">
                 {badge}
               </Badge>
             )}

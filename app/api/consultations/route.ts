@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { checkRateLimit, validateOrigin } from "@/lib/api-security";
 import { createConsultationEvent, getAvailableSlotsForDesk } from "@/lib/google-calendar";
+import { isAllowedConsultationDesk } from "@/lib/service-policy";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const consultationSchema = z.object({
@@ -44,6 +45,10 @@ export async function POST(request: Request) {
 
   const { fullName, email, phone, desk, date, time, notes } = parsed.data;
 
+  if (!isAllowedConsultationDesk(desk)) {
+    return NextResponse.json({ error: "Unsupported consultation desk." }, { status: 400 });
+  }
+
   const { slots } = await getAvailableSlotsForDesk({ desk, date });
   if (!slots.includes(time)) {
     return NextResponse.json({ error: "Selected slot is no longer available. Please choose another time." }, { status: 409 });
@@ -81,6 +86,7 @@ export async function POST(request: Request) {
 
   const url = new URL(request.url);
   url.pathname = "/thank-you";
-  url.search = "?source=consultation";
+  url.searchParams.set("source", "consultation");
+  url.searchParams.set("desk", desk);
   return NextResponse.redirect(url, 303);
 }

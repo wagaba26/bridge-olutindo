@@ -12,19 +12,14 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
     description: "Master the language with N5-N3 courses and expert instructors.",
   },
   {
-    title: "Jobs in Japan",
-    href: "/jobs",
-    description: "Find career opportunities in factory, caregiving, IT, and more.",
-  },
-  {
-    title: "Study & Exchange",
+    title: "Study in Japan",
     href: "/study",
     description: "Discover language schools, universities, and exchange programs.",
   },
   {
-    title: "Partner Program",
-    href: "/programs",
-    description: "Explore partner-facing programs for institutions and employers.",
+    title: "Partners",
+    href: "/partners",
+    description: "Collaborate with Bridge across institutions and business pathways.",
   },
   {
     title: "Resources",

@@ -1,10 +1,10 @@
 export const COMPANY_PROFILE = {
   name: "Bridge Olutindo",
-  alias: "Bridge4U",
+  alias: "Bridge Olutindo",
   parentCompany: "KUMBA Co., Ltd.",
   motto: "Okutambula Kulaba",
   mission:
-    "To connect Uganda and Japan through education, work, study, and institutional collaboration, enabling individuals and organizations to access structured opportunities supported by language preparation and practical guidance.",
+    "To connect Uganda and Japan through education, study, and institutional collaboration, enabling individuals and organizations to access structured opportunities supported by language preparation and practical guidance.",
   vision:
     "To become a scalable Africa-Japan bridge platform, starting in Uganda, supporting talent development, institutional partnerships, and sustainable cross-border exchange.",
   contact: {

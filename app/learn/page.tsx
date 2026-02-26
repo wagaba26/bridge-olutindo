@@ -1,165 +1,177 @@
+﻿"use client";
+
 import Link from "next/link";
 
-import { StickyCTA } from "@/components/site/sticky-cta";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useSiteLanguage } from "@/components/site/language-provider";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { COMPANY_PROFILE } from "@/lib/company-profile";
+import { FadeIn } from "@/components/ui/fade-in";
 
-export const metadata = {
-  title: "Learn Japanese | Bridge Olutindo",
-  description: "Premium N5-N3 Japanese programs with clear schedules for Ugandan learners preparing for Japan.",
-};
-
-const n5Programs = [
-  { title: "N5 Evening Cohort", duration: "12 weeks", mode: "Hybrid", schedule: "3x weekly, 1-hour lessons" },
-  {
-    title: "Starter Foundations - Extended (N5)",
-    duration: "6 months",
-    mode: "Hybrid",
-    schedule: "3x 1-hour lessons per week",
+const COPY = {
+  en: {
+    kicker: "Learn Japanese",
+    title: "Choose the right level and progress with a clear weekly structure.",
+    body: "N5 to N3 cohorts designed for measurable progress in grammar, listening, reading, and speaking.",
+    primaryCta: "Start intake",
+    secondaryCta: "Explore levels",
+    panelEyebrow: "Learning model",
+    panelTitle: "How progression is evaluated",
+    panelItems: [
+      "Weekly target clarity for grammar, listening, and output.",
+      "Error-pattern review and recovery workflow.",
+      "Level-based benchmarks aligned to practical outcomes.",
+    ],
+    gridTitle: "Learn",
+    gridBody: "Open one section at a time for focus.",
+    viewSection: "View section",
+    sections: [
+      {
+        title: "Enrollment calendar",
+        body: "Upcoming cohort windows and intake timing.",
+        href: "/learn/enrollment",
+      },
+      {
+        title: "How it works",
+        body: "From intake to measurable weekly progress.",
+        href: "/learn/how-it-works",
+      },
+      {
+        title: "JLPT levels",
+        body: "Choose the level that matches your current ability.",
+        href: "/learn/jlpt-levels",
+      },
+      {
+        title: "Self-study",
+        body: "Guided drills for speaking, listening, and reading.",
+        href: "/learn/self-study",
+      },
+      {
+        title: "Learning system",
+        body: "Weekly rhythm, review cadence, and measurable milestones.",
+        href: "/learn/learning-system",
+      },
+      {
+        title: "Guides",
+        body: "Research-backed resources to refine your plan.",
+        href: "/learn/guides",
+      },
+      {
+        title: "FAQ",
+        body: "Clear answers before you commit to a cohort.",
+        href: "/learn/faq",
+      },
+    ],
   },
-  { title: "N5 Intensive Bootcamp", duration: "6 weeks", mode: "In-person", schedule: "5x weekly, 2-hour lessons" },
-];
-
-const n4Programs = [
-  { title: "N4 Evening Program", duration: "12 weeks", mode: "Hybrid", schedule: "3x weekly, 1.5-hour lessons" },
-  { title: "N4 Exam Prep Clinic", duration: "8 weeks", mode: "Online", schedule: "2x weekly, 2-hour lessons" },
-];
-
-const n3Programs = [
-  { title: "N3 Career Track", duration: "16 weeks", mode: "Hybrid", schedule: "3x weekly, 2-hour lessons" },
-  {
-    title: "N3 Reading and Listening Lab",
-    duration: "10 weeks",
-    mode: "Online",
-    schedule: "2x weekly, 90-minute lessons",
+  ja: {
+    kicker: "日本語学習",
+    title: "自分に合うレベルを選び、週次の学習設計で着実に伸ばす。",
+    body: "N5からN3まで、文法・聴解・読解・会話を段階的に伸ばせるコホート型プログラムです。",
+    primaryCta: "インテーク開始",
+    secondaryCta: "レベルを見る",
+    panelEyebrow: "学習モデル",
+    panelTitle: "進捗評価の設計",
+    panelItems: [
+      "文法・聴解・アウトプットの週次目標を明確化。",
+      "誤答傾向をもとにした復習と修正の導線設計。",
+      "実務到達を意識したレベル別ベンチマーク運用。",
+    ],
+    gridTitle: "学習",
+    gridBody: "一度に一つずつ確認すると、判断を整理しやすくなります。",
+    viewSection: "セクションを見る",
+    sections: [
+      {
+        title: "募集カレンダー",
+        body: "次回コホートの開始時期と受付期間を確認。",
+        href: "/learn/enrollment",
+      },
+      {
+        title: "進め方",
+        body: "初回診断から週次の進捗管理までの流れ。",
+        href: "/learn/how-it-works",
+      },
+      {
+        title: "JLPTレベル",
+        body: "現在地に合う学習レベルを選択。",
+        href: "/learn/jlpt-levels",
+      },
+      {
+        title: "独学サポート",
+        body: "会話・聴解・読解の反復ドリルを提供。",
+        href: "/learn/self-study",
+      },
+      {
+        title: "学習システム",
+        body: "週次リズム、復習設計、到達指標を明確化。",
+        href: "/learn/learning-system",
+      },
+      {
+        title: "ガイド",
+        body: "実務的な判断に使える解説資料。",
+        href: "/learn/guides",
+      },
+      {
+        title: "よくある質問",
+        body: "受講前に確認したいポイントを整理。",
+        href: "/learn/faq",
+      },
+    ],
   },
-];
-
-function ProgramGrid({ programs, level }: { programs: { title: string; duration: string; mode: string; schedule: string }[]; level: string }) {
-  return (
-    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-      {programs.map((program) => (
-        <article key={program.title} className="rounded-2xl border border-slate-200 bg-white p-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Level {level}</p>
-          <h3 className="mt-2 text-lg">{program.title}</h3>
-          <dl className="mt-4 space-y-2 text-sm text-slate-700">
-            <div className="flex justify-between gap-3">
-              <dt className="text-slate-500">Duration</dt>
-              <dd className="text-right font-medium text-slate-900">{program.duration}</dd>
-            </div>
-            <div className="flex justify-between gap-3">
-              <dt className="text-slate-500">Mode</dt>
-              <dd className="text-right font-medium text-slate-900">{program.mode}</dd>
-            </div>
-            <div className="flex justify-between gap-3">
-              <dt className="text-slate-500">Weekly schedule</dt>
-              <dd className="text-right font-medium text-slate-900">{program.schedule}</dd>
-            </div>
-          </dl>
-          <Button asChild className="mt-5 h-11 rounded-xl px-4">
-            <Link href="/intake?focus=learn">Join waiting list</Link>
-          </Button>
-        </article>
-      ))}
-    </div>
-  );
-}
+} as const;
 
 export default function LearnPage() {
+  const { locale } = useSiteLanguage();
+  const copy = COPY[locale];
+
   return (
-    <div className="min-h-screen pb-20 md:pb-0">
-      <section className="border-b bg-white">
-        <div className="container mx-auto px-4 py-10 md:py-14">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-600">Learn Japanese</p>
-          <h1 className="mt-3 max-w-3xl">Choose the right Japanese level and move forward with confidence.</h1>
-          <p className="mt-4 max-w-2xl text-sm text-slate-600 md:text-base">
-            Structured N5 to N3 programs with clear schedules and practical preparation for work or study pathways.
-          </p>
+    <div className="min-h-screen bg-[linear-gradient(180deg,#fffcf7_0%,#f7f9fc_42%,#fffcf7_100%)]">
+      <section className="section-shell border-b border-slate-300/70 bg-[#f3f4f6]">
+        <div className="relative overflow-hidden">
+          <div className="container mx-auto px-4 md:pr-[48%]">
+            <FadeIn>
+              <div className="space-y-4 md:space-y-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-600">{copy.kicker}</p>
+                <h1 className="max-w-xl text-balance">{copy.title}</h1>
+                <p className="max-w-xl text-slate-600">{copy.body}</p>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Button asChild className="h-11 rounded-xl px-5">
+                    <Link href="/intake?focus=learn">{copy.primaryCta}</Link>
+                  </Button>
+                  <Button asChild variant="outline" className="h-11 rounded-xl px-5">
+                    <Link href="/learn/jlpt-levels">{copy.secondaryCta}</Link>
+                  </Button>
+                </div>
+              </div>
+            </FadeIn>
+          </div>
+          <div className="mt-8 h-[260px] w-full border-y border-black bg-white md:absolute md:inset-y-0 md:right-0 md:mt-0 md:h-auto md:w-[48%] md:border-x md:border-y-0" aria-hidden="true" />
         </div>
       </section>
 
-      <section className="py-8 md:py-10">
-        <div className="container mx-auto space-y-6 px-4">
-          <div className="rounded-2xl border border-slate-200 bg-slate-900 p-5 text-white md:p-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-300">Featured program</p>
-            <h2 className="mt-2 text-2xl text-white">{COMPANY_PROFILE.jclatProgram.title}</h2>
-            <p className="mt-2 text-sm text-slate-200">
-              Built for learners targeting study or work pathways in Japan with a recognized language score report.
-            </p>
-            <div className="mt-4 grid gap-2 text-sm text-slate-200 md:grid-cols-2">
-              <p>Duration: {COMPANY_PROFILE.jclatProgram.duration}</p>
-              <p>Class length: {COMPANY_PROFILE.jclatProgram.lessonLength}</p>
-              <p>Schedule: {COMPANY_PROFILE.jclatProgram.schedule.join(" | ")}</p>
-              <p>Online test: {COMPANY_PROFILE.jclatProgram.testCadence}</p>
-              <p>Monthly fee: USD {COMPANY_PROFILE.jclatProgram.monthlyFeeUsd}</p>
-              <p>Registration: USD {COMPANY_PROFILE.jclatProgram.registrationFeeUsd} (one-time)</p>
+      <section className="py-10 md:py-12">
+        <div className="container mx-auto px-4">
+          <FadeIn>
+            <div className="foundation-grid">
+              <div className="foundation-grid__layout">
+                <div className="foundation-grid__label">
+                  <p className="foundation-grid__title">{copy.gridTitle}</p>
+                  <p className="foundation-grid__body">{copy.gridBody}</p>
+                </div>
+                <div className="foundation-grid__cells">
+                  {copy.sections.map((item) => (
+                    <Link key={item.title} href={item.href} className="foundation-grid__cell">
+                      <h3 className="foundation-grid__cell-title">{item.title}</h3>
+                      <p className="mt-2 text-sm text-slate-600">{item.body}</p>
+                      <span className="foundation-grid__cell-cta">
+                        {copy.viewSection}
+                        <span className="foundation-grid__cell-icon">&gt;</span>
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
             </div>
-            <p className="mt-3 text-xs text-slate-300">
-              Full 6-month payment: USD {COMPANY_PROFILE.jclatProgram.fullProgramUsd}. {COMPANY_PROFILE.jclatProgram.exchangeRateNote}.
-            </p>
-            <Button asChild variant="secondary" className="mt-4 h-11 rounded-xl px-4">
-              <Link href="/learn/jlcat">Enroll in JLCAT track</Link>
-            </Button>
-          </div>
-
-          <Tabs defaultValue="n5">
-            <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto rounded-xl bg-slate-100 p-1.5">
-              <TabsTrigger value="n5" className="min-h-11 min-w-[120px] rounded-lg px-4 py-2 font-semibold">
-                N5 Beginner
-              </TabsTrigger>
-              <TabsTrigger value="n4" className="min-h-11 min-w-[120px] rounded-lg px-4 py-2 font-semibold">
-                N4 Foundation
-              </TabsTrigger>
-              <TabsTrigger value="n3" className="min-h-11 min-w-[120px] rounded-lg px-4 py-2 font-semibold">
-                N3 Intermediate
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="n5" className="mt-4">
-              <ProgramGrid programs={n5Programs} level="N5" />
-            </TabsContent>
-            <TabsContent value="n4" className="mt-4">
-              <ProgramGrid programs={n4Programs} level="N4" />
-            </TabsContent>
-            <TabsContent value="n3" className="mt-4">
-              <ProgramGrid programs={n3Programs} level="N3" />
-            </TabsContent>
-          </Tabs>
-
-          <div className="rounded-2xl border border-slate-200 bg-white p-5">
-            <h2 className="text-xl">How to choose your level</h2>
-            <Accordion type="single" collapsible className="mt-3">
-              <AccordionItem value="n5">
-                <AccordionTrigger>Start with N5 if you are new to Japanese.</AccordionTrigger>
-                <AccordionContent>
-                  N5 introduces scripts, basic grammar, daily vocabulary, and practical conversation patterns.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="n4">
-                <AccordionTrigger>Pick N4 if you can already handle beginner conversations.</AccordionTrigger>
-                <AccordionContent>
-                  N4 deepens reading, listening, and structured speaking for workplace and school settings.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="n3">
-                <AccordionTrigger>Move to N3 when your goals include interviews and advanced communication.</AccordionTrigger>
-                <AccordionContent>
-                  N3 focuses on applied language needed for career progression and everyday life in Japan.
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
+          </FadeIn>
         </div>
       </section>
-
-      <StickyCTA
-        primaryLabel="Talk to an advisor"
-        primaryHref="/intake?focus=learn"
-        secondaryLabel="Join waiting list"
-        secondaryHref="/intake?focus=learn"
-      />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { checkRateLimit, validateOrigin } from "@/lib/api-security";
+import { isAllowedConsultationDesk, isAllowedIntakeFocus } from "@/lib/service-policy";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const intakeSchema = z.object({
@@ -22,6 +23,7 @@ const intakeSchema = z.object({
   educationStatus: z.string().max(120).optional(),
   organization: z.string().max(160).optional(),
   partnershipModel: z.string().max(80).optional(),
+  preferredSupportDesk: z.string().max(40).optional(),
 });
 
 export async function POST(request: Request) {
@@ -55,6 +57,7 @@ export async function POST(request: Request) {
     educationStatus: String(formData.get("education_status") ?? "").trim() || undefined,
     organization: String(formData.get("organization") ?? "").trim() || undefined,
     partnershipModel: String(formData.get("partnership_model") ?? "").trim() || undefined,
+    preferredSupportDesk: String(formData.get("preferred_support_desk") ?? "").trim() || undefined,
   });
 
   if (!parsed.success) {
@@ -79,7 +82,15 @@ export async function POST(request: Request) {
     educationStatus,
     organization,
     partnershipModel,
+    preferredSupportDesk,
   } = parsed.data;
+
+  if (focus && !isAllowedIntakeFocus(focus)) {
+    return NextResponse.json({ error: "Unsupported intake focus." }, { status: 400 });
+  }
+  if (preferredSupportDesk && !isAllowedConsultationDesk(preferredSupportDesk)) {
+    return NextResponse.json({ error: "Unsupported support desk." }, { status: 400 });
+  }
 
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.from("leads").insert({
@@ -102,6 +113,7 @@ export async function POST(request: Request) {
       education_status: educationStatus,
       organization,
       partnership_model: partnershipModel,
+      preferred_support_desk: preferredSupportDesk,
     },
   });
 
@@ -114,6 +126,9 @@ export async function POST(request: Request) {
 
   const url = new URL(request.url);
   url.pathname = "/thank-you";
-  url.search = "?source=intake";
+  url.searchParams.set("source", "intake");
+  if (preferredSupportDesk) {
+    url.searchParams.set("desk", preferredSupportDesk);
+  }
   return NextResponse.redirect(url, 303);
 }

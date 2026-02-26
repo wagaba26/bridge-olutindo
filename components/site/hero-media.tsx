@@ -11,10 +11,6 @@ const heroVideos = [
     src: "/videos/hero/study-in-japan.mp4",
     label: "Study in Japan",
   },
-  {
-    src: "/videos/hero/work-in-japan.mp4",
-    label: "Work in Japan",
-  },
 ];
 
 export function HeroMedia() {

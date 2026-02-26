@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { checkRateLimit, validateOrigin } from "@/lib/api-security";
+import { isAllowedConsultationDesk } from "@/lib/service-policy";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const partnersSchema = z.object({
@@ -14,6 +15,7 @@ const partnersSchema = z.object({
   partnershipFocus: z.string().max(180).optional(),
   partnershipModel: z.string().max(120).optional(),
   targetStartWindow: z.string().max(120).optional(),
+  routingDesk: z.string().max(40).optional(),
   details: z.string().min(10).max(2500),
 });
 
@@ -40,6 +42,7 @@ export async function POST(request: Request) {
     partnershipFocus: String(formData.get("partnership_focus") ?? "").trim() || undefined,
     partnershipModel: String(formData.get("partnership_model") ?? "").trim() || undefined,
     targetStartWindow: String(formData.get("target_start_window") ?? "").trim() || undefined,
+    routingDesk: String(formData.get("routing_desk") ?? "").trim() || undefined,
     details: String(formData.get("details") ?? "").trim(),
   });
 
@@ -57,8 +60,13 @@ export async function POST(request: Request) {
     partnershipFocus,
     partnershipModel,
     targetStartWindow,
+    routingDesk,
     details,
   } = parsed.data;
+
+  if (routingDesk && !isAllowedConsultationDesk(routingDesk)) {
+    return NextResponse.json({ error: "Unsupported routing desk." }, { status: 400 });
+  }
 
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.from("leads").insert({
@@ -66,6 +74,7 @@ export async function POST(request: Request) {
     full_name: contactName,
     email,
     organization,
+    focus: routingDesk ?? "partners",
     message: details,
     metadata: {
       region,
@@ -86,6 +95,7 @@ export async function POST(request: Request) {
 
   const url = new URL(request.url);
   url.pathname = "/thank-you";
-  url.search = "?source=partners";
+  url.searchParams.set("source", "partners");
+  url.searchParams.set("desk", routingDesk ?? "partners");
   return NextResponse.redirect(url, 303);
 }

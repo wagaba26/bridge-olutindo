@@ -14,7 +14,7 @@ export default function DashboardApplicationsPage() {
       <div>
         <h1 className="mb-2">Applications</h1>
         <p className="text-sm text-muted-foreground">
-          Track your program, job, or school applications in one consolidated timeline.
+          Track your program, institution, or school applications in one consolidated timeline.
         </p>
       </div>
 
@@ -65,7 +65,7 @@ export default function DashboardApplicationsPage() {
         <CardContent className="space-y-2 text-sm text-muted-foreground">
           <p>1. Intake submission and profile review.</p>
           <p>2. Advisor follow-up with required documents.</p>
-          <p>3. Program, job, or institution matching and progress updates.</p>
+          <p>3. Program or institution matching and progress updates.</p>
         </CardContent>
       </Card>
     </div>

@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { checkRateLimit } from "@/lib/api-security";
 import { getAvailableSlotsForDesk, hasGoogleCalendarIntegration } from "@/lib/google-calendar";
+import { isAllowedConsultationDesk } from "@/lib/service-policy";
 
 const querySchema = z.object({
   desk: z.string().max(40),
@@ -24,6 +25,10 @@ export async function GET(request: Request) {
   }
 
   const { desk, date } = parsed.data;
+
+  if (!isAllowedConsultationDesk(desk)) {
+    return NextResponse.json({ error: "Unsupported consultation desk." }, { status: 400 });
+  }
 
   try {
     const { slots, source } = await getAvailableSlotsForDesk({ desk, date });

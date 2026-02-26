@@ -33,9 +33,9 @@ export function SectionHeading({
           {eyebrow}
         </p>
       )}
-      <h2>{title}</h2>
+      <h2 className="text-balance">{title}</h2>
       {description && (
-        <p className="text-muted-foreground text-sm md:text-base">
+        <p className="text-muted-foreground max-w-[65ch] text-sm md:text-base">
           {description}
         </p>
       )}

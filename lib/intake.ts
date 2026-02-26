@@ -1,6 +1,6 @@
-export type IntakeFocus = "learn" | "jobs" | "study" | "partners";
+import type { IntakeFocus } from "@/lib/service-policy";
 
-export const ENABLE_JOBS_FOCUS = process.env.NEXT_PUBLIC_ENABLE_JOBS_FOCUS !== "false";
+export type { IntakeFocus };
 
 export const INTAKE_FOCUS_OPTIONS: Array<{
   value: IntakeFocus;
@@ -13,12 +13,6 @@ export const INTAKE_FOCUS_OPTIONS: Array<{
     label: "Learn Japanese",
     description: "Join language cohorts from N5 to N3 with structured preparation.",
     enabled: true,
-  },
-  {
-    value: "jobs",
-    label: "Jobs in Japan",
-    description: "Explore vetted job tracks with language and interview readiness support.",
-    enabled: ENABLE_JOBS_FOCUS,
   },
   {
     value: "study",

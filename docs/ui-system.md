@@ -4,7 +4,7 @@
 - Keep existing route structure and content intent, but rebuild page scaffolding with a mobile-first hierarchy.
 - Make mobile the default canvas (320-430px), then scale to md (768), lg (1024), and xl (1280).
 - Use premium but restrained visuals: clean panels, stronger spacing rhythm, subtle shadows, and clear CTA zones.
-- Prioritize conversion-critical interactions (navigation, jobs search/filter, partner contact forms, sticky CTA on mobile).
+- Prioritize conversion-critical interactions (navigation, learn/study exploration, partner contact forms, sticky CTA on mobile).
 
 ## Core components
 - Header
@@ -23,7 +23,6 @@
 - StickyCTA
 - Footer
 - LogoStrip
-- JobCard
 
 ## Layout and interaction rules
 - 8pt spacing scale: 4, 8, 12, 16, 24, 32, 40, 48, 64.

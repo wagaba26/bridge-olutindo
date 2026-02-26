@@ -9,9 +9,64 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/ui/fade-in";
 import { createSupabaseBrowserClientOrNull } from "@/lib/supabase/client";
+import { useSiteLanguage } from "@/components/site/language-provider";
+
+const COPY = {
+  en: {
+    eyebrow: "Account",
+    title: "Create your Bridge Olutindo account.",
+    description: "Choose whether you are a learner, student, or partner.",
+    fullName: "Full name",
+    namePlaceholder: "Your name",
+    email: "Email",
+    password: "Password",
+    role: "I am primarily a...",
+    rolePlaceholder: "Student / Learner / Partner / Other",
+    already: "Already have an account?",
+    login: "Log in",
+    authUnavailable: "Authentication is temporarily unavailable in this environment.",
+    creating: "Creating account...",
+    create: "Create account",
+    connecting: "Connecting to Google...",
+    continueGoogle: "Continue with Google",
+    loginInstead: "Log in instead",
+    authTemp: "Authentication is temporarily unavailable. Please contact support.",
+    authGoogleTemp: "Google sign-in is temporarily unavailable. Please use email sign-up.",
+    accountCreated: "Account created. Please check your email to confirm your address before logging in.",
+    accountError: "Something went wrong while creating your account. Please try again.",
+    googleError: "Something went wrong while starting Google sign-in.",
+  },
+  ja: {
+    eyebrow: "アカウント",
+    title: "Bridge Olutindoアカウントを作成する。",
+    description: "学習者・留学希望者・パートナーなど、主な利用目的を選択してください。",
+    fullName: "氏名",
+    namePlaceholder: "お名前",
+    email: "メールアドレス",
+    password: "パスワード",
+    role: "主な利用目的",
+    rolePlaceholder: "留学 / 学習 / 提携 / その他",
+    already: "すでにアカウントをお持ちですか？",
+    login: "ログイン",
+    authUnavailable: "この環境では認証機能が一時的に利用できません。",
+    creating: "アカウントを作成中...",
+    create: "アカウントを作成",
+    connecting: "Googleに接続中...",
+    continueGoogle: "Googleで続行",
+    loginInstead: "ログイン画面へ",
+    authTemp: "認証機能が一時的に利用できません。サポートへお問い合わせください。",
+    authGoogleTemp: "Googleログインが一時的に利用できません。メール登録をご利用ください。",
+    accountCreated: "アカウントを作成しました。メール確認後にログインしてください。",
+    accountError: "アカウント作成中に問題が発生しました。時間をおいて再度お試しください。",
+    googleError: "Googleログインの開始に失敗しました。",
+  },
+} as const;
 
 export default function SignupPage() {
   const router = useRouter();
+  const { locale } = useSiteLanguage();
+  const language = locale === "ja" ? "ja" : "en";
+  const copy = COPY[language];
   const authEnabled =
     Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL) &&
     Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
@@ -44,7 +99,7 @@ export default function SignupPage() {
     setIsLoading(true);
 
     if (!authEnabled) {
-      setError("Authentication is temporarily unavailable. Please contact support.");
+      setError(copy.authTemp);
       setIsLoading(false);
       return;
     }
@@ -58,7 +113,7 @@ export default function SignupPage() {
     try {
       const supabase = createSupabaseBrowserClientOrNull();
       if (!supabase) {
-        setError("Authentication is temporarily unavailable. Please contact support.");
+        setError(copy.authTemp);
         setIsLoading(false);
         return;
       }
@@ -80,10 +135,10 @@ export default function SignupPage() {
         return;
       }
 
-      setInfo("Account created. Please check your email to confirm your address before logging in.");
+      setInfo(copy.accountCreated);
       setIsLoading(false);
     } catch {
-      setError("Something went wrong while creating your account. Please try again.");
+      setError(copy.accountError);
       setIsLoading(false);
     }
   }
@@ -93,7 +148,7 @@ export default function SignupPage() {
     setIsOAuthLoading(true);
 
     if (!authEnabled) {
-      setError("Google sign-in is temporarily unavailable. Please use email sign-up.");
+      setError(copy.authGoogleTemp);
       setIsOAuthLoading(false);
       return;
     }
@@ -101,7 +156,7 @@ export default function SignupPage() {
     try {
       const supabase = createSupabaseBrowserClientOrNull();
       if (!supabase) {
-        setError("Google sign-in is temporarily unavailable. Please use email sign-up.");
+        setError(copy.authGoogleTemp);
         setIsOAuthLoading(false);
         return;
       }
@@ -118,95 +173,73 @@ export default function SignupPage() {
         setIsOAuthLoading(false);
       }
     } catch {
-      setError("Something went wrong while starting Google sign-in.");
+      setError(copy.googleError);
       setIsOAuthLoading(false);
     }
   }
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-slate-50/80 px-4 py-8 md:py-12">
+    <div className="min-h-[calc(100vh-4rem)] bg-[radial-gradient(circle_at_10%_8%,rgba(201,93,69,0.14),transparent_40%),linear-gradient(180deg,#f7f9fd_0%,#fdfaf3_100%)] px-4 py-10 md:py-14">
       <FadeIn>
-        <Card className="w-full max-w-md border border-slate-200 shadow-lg">
-          <CardHeader className="space-y-2">
+        <Card className="mx-auto w-full max-w-lg border border-slate-200 bg-white shadow-[0_18px_55px_rgba(15,23,42,0.08)]">
+          <CardHeader className="space-y-3">
             <SectionHeading
-              eyebrow="Account"
-              title="Create your Bridge Olutindo account."
-              description="Choose whether you&apos;re a learner, job seeker, or partner."
+              eyebrow={copy.eyebrow}
+              title={copy.title}
+              description={copy.description}
               align="left"
               className="max-w-none"
             />
           </CardHeader>
           <form onSubmit={handleSubmit}>
-            <CardContent className="space-y-4">
-              <div className="space-y-1 text-sm">
+            <CardContent className="space-y-5">
+              <div className="space-y-1.5 text-sm">
                 <label className="font-medium" htmlFor="name">
-                  Full name
+                  {copy.fullName}
                 </label>
-                <Input id="name" name="name" placeholder="Your name" className="h-10 rounded-xl" required />
+                <Input id="name" name="name" placeholder={copy.namePlaceholder} required />
               </div>
-              <div className="space-y-1 text-sm">
+              <div className="space-y-1.5 text-sm">
                 <label className="font-medium" htmlFor="email">
-                  Email
+                  {copy.email}
                 </label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  className="h-10 rounded-xl"
-                  required
-                />
+                <Input id="email" name="email" type="email" placeholder="you@example.com" required />
               </div>
-              <div className="space-y-1 text-sm">
+              <div className="space-y-1.5 text-sm">
                 <label className="font-medium" htmlFor="password">
-                  Password
+                  {copy.password}
                 </label>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="••••••••"
-                  className="h-10 rounded-xl"
-                  required
-                />
+                <Input id="password" name="password" type="password" placeholder="********" required />
               </div>
-              <div className="space-y-1 text-sm">
+              <div className="space-y-1.5 text-sm">
                 <label className="font-medium" htmlFor="role">
-                  I am primarily a...
+                  {copy.role}
                 </label>
-                <Input
-                  id="role"
-                  name="role"
-                  placeholder="Student / Job seeker / Partner / Other"
-                  className="h-10 rounded-xl"
-                />
+                <Input id="role" name="role" placeholder={copy.rolePlaceholder} />
               </div>
-              <div className="text-xs text-muted-foreground">
-                Already have an account?{" "}
-                <Link href="/login" className="font-medium text-slate-700 underline-offset-4 hover:underline">
-                  Log in
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-muted-foreground">
+                {copy.already}{" "}
+                <Link href="/login" className="font-semibold text-brand-700 underline-offset-4 hover:underline">
+                  {copy.login}
                 </Link>
               </div>
               {!authEnabled ? (
                 <p className="rounded-lg border border-amber-200 bg-amber-50 p-2 text-xs text-amber-700">
-                  Authentication is temporarily unavailable in this environment.
+                  {copy.authUnavailable}
                 </p>
               ) : null}
-              {error && <p className="text-xs text-red-500">{error}</p>}
-              {info && <p className="text-xs text-emerald-600">{info}</p>}
+              {error && <p className="rounded-lg border border-red-200 bg-red-50 p-2 text-xs text-red-700">{error}</p>}
+              {info && <p className="rounded-lg border border-emerald-200 bg-emerald-50 p-2 text-xs text-emerald-700">{info}</p>}
             </CardContent>
             <CardFooter className="flex flex-col gap-3">
-              <Button type="submit" className="h-10 w-full rounded-xl" disabled={isLoading}>
-                {isLoading ? "Creating account..." : "Create account"}
+              <Button type="submit" className="w-full rounded-xl" disabled={isLoading}>
+                {isLoading ? copy.creating : copy.create}
               </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                className="h-10 w-full rounded-xl"
-                onClick={handleGoogleSignIn}
-                disabled={isOAuthLoading}
-              >
-                {isOAuthLoading ? "Connecting to Google..." : "Continue with Google"}
+              <Button type="button" variant="secondary" className="w-full rounded-xl" onClick={handleGoogleSignIn} disabled={isOAuthLoading}>
+                {isOAuthLoading ? copy.connecting : copy.continueGoogle}
+              </Button>
+              <Button asChild variant="outline" className="w-full rounded-xl">
+                <Link href="/login">{copy.loginInstead}</Link>
               </Button>
             </CardFooter>
           </form>

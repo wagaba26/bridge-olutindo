@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import type { IntakeFocus } from "@/lib/intake";
+import { ALLOWED_CONSULTATION_DESKS } from "@/lib/service-policy";
 
 const FLOW_COPY: Record<
   IntakeFocus,
@@ -17,41 +18,45 @@ const FLOW_COPY: Record<
   }
 > = {
   learn: {
-    helper: "Tell us your current level and preferred study schedule.",
-    messagePlaceholder: "Share your learning goal, target level (N5/N4/N3), and timeline.",
+    helper: "Provide your current level, weekly capacity, and target JLPT stage (N5, N4, or N3).",
+    messagePlaceholder: "State your target level, baseline, weekly hours, and realistic timeline.",
     nextSteps: [
-      "We review your level and readiness for the right class track.",
-      "A language advisor reaches out within 1-2 business days.",
-      "You receive a practical class and intake recommendation.",
-    ],
-  },
-  jobs: {
-    helper: "Tell us your role interest and language readiness for Japan job tracks.",
-    messagePlaceholder: "Share your preferred job category, background, and timeline.",
-    nextSteps: [
-      "We review your profile and role fit for available pathways.",
-      "A placement advisor contacts you within 1-2 business days.",
-      "You receive a readiness and next-step plan for job matching.",
+      "We evaluate your baseline and progression requirements.",
+      "An academic advisor responds within 1-2 business days.",
+      "You receive a structured training recommendation.",
     ],
   },
   study: {
-    helper: "Tell us your study goal, preferred intake, and education background.",
-    messagePlaceholder: "Share your target school type, intake period, and scholarship goals.",
+    helper: "Provide your study objective, intake period, and current education background.",
+    messagePlaceholder: "Share school type, intake month, and document preparation status.",
     nextSteps: [
-      "We review your study profile and intake timing.",
-      "A study advisor reaches out within 1-2 business days.",
-      "You receive an admissions and preparation action plan.",
+      "We review your study profile and timing constraints.",
+      "A study advisor responds within 1-2 business days.",
+      "You receive a preparation sequence with clear milestones.",
     ],
   },
   partners: {
-    helper: "Tell us your organization type and intended collaboration model.",
-    messagePlaceholder: "Share your partnership objective, scope, and expected timeline.",
+    helper: "Provide organization type, collaboration model, and expected timeline.",
+    messagePlaceholder: "Describe the objective, scope, and implementation timeline.",
     nextSteps: [
-      "We review your institution details and partnership model.",
-      "A partnership advisor contacts you within 1-2 business days.",
-      "We share a scoped onboarding path and coordination steps.",
+      "We review your institutional context and model.",
+      "A partnership advisor responds within 1-2 business days.",
+      "We share a scoped coordination plan.",
     ],
   },
+};
+
+const DESK_LABELS: Record<string, string> = {
+  language: "Language Desk",
+  study: "Study and Exchange Desk",
+  partners: "Partnerships Desk",
+  business: "Business Consultancy Desk",
+};
+
+const DEFAULT_DESK_BY_FOCUS: Record<IntakeFocus, string> = {
+  learn: "language",
+  study: "study",
+  partners: "partners",
 };
 
 export function IntakeForm({
@@ -64,6 +69,7 @@ export function IntakeForm({
   focusOptions: Array<{ value: IntakeFocus; label: string; description: string }>;
 }) {
   const [focus, setFocus] = useState<IntakeFocus>(initialFocus);
+  const [desk, setDesk] = useState<string>(DEFAULT_DESK_BY_FOCUS[initialFocus] ?? ALLOWED_CONSULTATION_DESKS[0] ?? "language");
 
   const flow = useMemo(() => FLOW_COPY[focus], [focus]);
 
@@ -71,14 +77,27 @@ export function IntakeForm({
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-start">
       <Card>
         <CardHeader className="pb-4">
-          <CardTitle>Share your details</CardTitle>
+          <CardTitle>Submit structured details</CardTitle>
         </CardHeader>
         <CardContent>
           <form className="space-y-4" action="/api/intake" method="post">
             <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
             <div className="space-y-1.5 text-sm">
               <label className="font-medium">What are you interested in?</label>
-              <Select name="focus" value={focus} onChange={(event) => setFocus(event.target.value as IntakeFocus)} className="h-11 rounded-xl" required>
+              <Select
+                name="focus"
+                value={focus}
+                onChange={(event) => {
+                  const nextFocus = event.target.value as IntakeFocus;
+                  setFocus(nextFocus);
+                  const nextDesk = DEFAULT_DESK_BY_FOCUS[nextFocus];
+                  if (nextDesk && ALLOWED_CONSULTATION_DESKS.includes(nextDesk as (typeof ALLOWED_CONSULTATION_DESKS)[number])) {
+                    setDesk(nextDesk);
+                  }
+                }}
+                className="h-11 rounded-xl"
+                required
+              >
                 {focusOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -115,8 +134,25 @@ export function IntakeForm({
               </div>
               <div className="space-y-1.5 text-sm">
                 <label className="font-medium">Current stage</label>
-                <Input name="current_stage" placeholder="Beginner / Exploring / Ready to apply" className="h-11 rounded-xl" />
+                <Select name="current_stage" defaultValue="exploring" className="h-11 rounded-xl">
+                  <option value="beginner">Beginner</option>
+                  <option value="exploring">Exploring options</option>
+                  <option value="ready_to_apply">Ready to apply</option>
+                  <option value="already_started">Already started elsewhere</option>
+                </Select>
               </div>
+            </div>
+
+            <div className="space-y-1.5 text-sm">
+              <label className="font-medium">Preferred support desk</label>
+              <Select name="preferred_support_desk" value={desk} onChange={(event) => setDesk(event.target.value)} className="h-11 rounded-xl">
+                {ALLOWED_CONSULTATION_DESKS.map((value) => (
+                  <option key={value} value={value}>
+                    {DESK_LABELS[value] ?? value}
+                  </option>
+                ))}
+              </Select>
+              <p className="text-xs text-muted-foreground">Your intake is routed to this desk first.</p>
             </div>
 
             {focus === "learn" ? (
@@ -131,29 +167,6 @@ export function IntakeForm({
                     <option value="monthly">Monthly plan</option>
                     <option value="full">Full upfront</option>
                     <option value="discuss">Discuss with advisor</option>
-                  </Select>
-                </div>
-              </div>
-            ) : null}
-
-            {focus === "jobs" ? (
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-1.5 text-sm">
-                  <label className="font-medium">Target role category</label>
-                  <Select name="target_role_category" defaultValue="factory" className="h-11 rounded-xl">
-                    <option value="factory">Factory</option>
-                    <option value="caregiving">Caregiving</option>
-                    <option value="it">IT and Digital</option>
-                    <option value="other">Other</option>
-                  </Select>
-                </div>
-                <div className="space-y-1.5 text-sm">
-                  <label className="font-medium">JLPT level</label>
-                  <Select name="jlpt_level" defaultValue="none" className="h-11 rounded-xl">
-                    <option value="none">Not yet started</option>
-                    <option value="n5">N5</option>
-                    <option value="n4">N4</option>
-                    <option value="n3">N3+</option>
                   </Select>
                 </div>
               </div>
@@ -176,12 +189,11 @@ export function IntakeForm({
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-1.5 text-sm">
                   <label className="font-medium">Organization</label>
-                  <Input name="organization" placeholder="Institution or company name" className="h-11 rounded-xl" />
+                  <Input name="organization" placeholder="Institution or organization name" className="h-11 rounded-xl" />
                 </div>
                 <div className="space-y-1.5 text-sm">
                   <label className="font-medium">Partnership model</label>
                   <Select name="partnership_model" defaultValue="custom" className="h-11 rounded-xl">
-                    <option value="talent">Talent pipeline</option>
                     <option value="education">Education collaboration</option>
                     <option value="exchange">Exchange program</option>
                     <option value="business">Business consultancy</option>
@@ -202,9 +214,9 @@ export function IntakeForm({
             </div>
 
             <Button type="submit" className="h-11 w-full rounded-xl px-5 sm:w-auto">
-              Send intake request
+              Submit intake
             </Button>
-            <p className="text-xs text-muted-foreground">Response time: usually within 24-72 business hours.</p>
+            <p className="text-xs text-muted-foreground">Response time: typically 24-72 business hours.</p>
           </form>
         </CardContent>
       </Card>

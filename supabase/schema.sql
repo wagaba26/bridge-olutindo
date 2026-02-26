@@ -112,6 +112,9 @@ create table if not exists public.learner_progress_updates (
   attendance_status text not null,
   class_date date not null,
   teacher_comment text not null,
+  engagement_rating int,
+  pronunciation_rating int,
+  homework_rating int,
   submitted_by uuid references auth.users on delete set null,
   submitted_by_role text
 );
@@ -138,6 +141,7 @@ create table if not exists public.learner_progress_summaries (
   attendance_rate int not null default 0,
   feedback_score int not null default 0,
   progress_score int not null default 0,
+  overall_teacher_rating numeric(2,1) not null default 0,
   last_class_date date,
   updated_at timestamptz not null default now()
 );
@@ -150,6 +154,31 @@ create policy "Progress summary upsert by staff"
   to authenticated
   using ((auth.jwt() -> 'user_metadata' ->> 'primary_role') in ('admin', 'teacher'))
   with check ((auth.jwt() -> 'user_metadata' ->> 'primary_role') in ('admin', 'teacher'));
+
+create policy "Progress summary view by learner email"
+  on public.learner_progress_summaries
+  for select
+  to authenticated
+  using (lower(learner_email) = lower(coalesce(auth.jwt() ->> 'email', '')));
+
+create policy "Progress updates view by learner email"
+  on public.learner_progress_updates
+  for select
+  to authenticated
+  using (lower(learner_email) = lower(coalesce(auth.jwt() ->> 'email', '')));
+
+alter table public.learner_progress_updates
+  add column if not exists engagement_rating int;
+alter table public.learner_progress_updates
+  add column if not exists pronunciation_rating int;
+alter table public.learner_progress_updates
+  add column if not exists homework_rating int;
+
+alter table public.learner_progress_summaries
+  add column if not exists overall_teacher_rating numeric(2,1) not null default 0;
+
+alter publication supabase_realtime add table public.learner_progress_updates;
+alter publication supabase_realtime add table public.learner_progress_summaries;
 
 create table if not exists public.staff_action_logs (
   id uuid primary key default gen_random_uuid(),

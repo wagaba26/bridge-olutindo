@@ -60,7 +60,7 @@ export default function DashboardProgramsPage() {
       <Card className="border-slate-200 bg-white">
         <CardHeader>
           <CardTitle>What to prepare now</CardTitle>
-          <CardDescription>Completing these steps helps us place you faster.</CardDescription>
+          <CardDescription>Completing these steps helps us recommend your best-fit pathway faster.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2 text-sm text-muted-foreground">
           <p>1. Select your preferred pathway and timeline in intake.</p>

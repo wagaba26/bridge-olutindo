@@ -1,11 +1,9 @@
-import Image from "next/image";
-
 const PARTNER_LOGOS = [
-  { name: "Kyoto Language Academy", src: "/next.svg" },
-  { name: "Makerere University", src: "/vercel.svg" },
-  { name: "Toyota Industries", src: "/globe.svg" },
-  { name: "Kampala Innovation Hub", src: "/window.svg" },
-  { name: "Tokyo Study Link", src: "/file.svg" },
+  { name: "Kyoto Language Academy" },
+  { name: "Makerere University" },
+  { name: "Toyota Industries" },
+  { name: "Kampala Innovation Hub" },
+  { name: "Tokyo Study Link" },
 ];
 
 export function LogoStrip() {
@@ -15,20 +13,13 @@ export function LogoStrip() {
         <p className="mb-5 text-center text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
           Trusted by institutions in Uganda and Japan
         </p>
-        <div className="grid grid-cols-2 items-center gap-5 opacity-70 grayscale sm:grid-cols-3 lg:grid-cols-5">
+        <div className="grid grid-cols-2 items-center gap-5 sm:grid-cols-3 lg:grid-cols-5">
           {PARTNER_LOGOS.map((logo) => (
             <div
               key={logo.name}
-              className="flex min-h-11 items-center justify-center rounded-lg border border-slate-200/80 bg-slate-50 px-4 py-3"
+              className="flex min-h-11 items-center justify-center border border-black bg-white px-4 py-3"
             >
-              <Image
-                src={logo.src}
-                alt={logo.name}
-                width={120}
-                height={26}
-                className="h-6 w-auto object-contain"
-                sizes="(max-width: 640px) 40vw, 140px"
-              />
+              <span className="text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-700">{logo.name}</span>
             </div>
           ))}
         </div>
