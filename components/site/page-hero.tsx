@@ -64,7 +64,7 @@ export function PageHero({
         {mobileImageFirst && primaryScene ? (
           <FadeIn>
             <div className="-mx-4 -mt-px border-y border-slate-300 bg-slate-50 md:hidden">
-              <div className={showImages ? "relative aspect-[16/10] w-full" : "relative h-[clamp(96px,20vh,150px)] w-full"}>
+              <div className="relative h-[clamp(188px,34vh,320px)] w-full">
                 {showImages ? (
                   <Image
                     src={primaryScene.src}
@@ -77,6 +77,7 @@ export function PageHero({
                 ) : (
                   <div className="h-full w-full border-x border-slate-300 bg-slate-50" aria-hidden="true" />
                 )}
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-white" aria-hidden="true" />
               </div>
             </div>
           </FadeIn>

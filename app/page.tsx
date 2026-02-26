@@ -189,7 +189,9 @@ export default function Home() {
           <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr] lg:gap-10">
             <FadeIn delay={0.04} className="order-1 lg:order-2">
               <div className="-mx-4 -mt-px border-y border-black bg-neutral-50 md:mx-0 md:mt-0 md:border md:border-black">
-                <div className="h-[clamp(96px,20vh,150px)] bg-neutral-50 md:h-[360px] lg:h-[420px]" />
+                <div className="relative h-[clamp(188px,34vh,320px)] bg-neutral-50 md:h-[360px] lg:h-[420px]">
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-white md:h-20" aria-hidden="true" />
+                </div>
               </div>
             </FadeIn>
 
