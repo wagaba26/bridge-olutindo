@@ -1,0 +1,102 @@
+:root {
+  --v2-bg: #f5f3ee;
+  --v2-surface: #fbfaf7;
+  --v2-surface-strong: #ffffff;
+  --v2-border: #d8d9df;
+  --v2-text: #171d2d;
+  --v2-text-muted: #4b556f;
+  --v2-accent: #24325b;
+  --v2-accent-strong: #182142;
+  --v2-accent-soft: #e9edf8;
+  --v2-focus: #24325b;
+
+  --v2-space-1: 0.25rem;
+  --v2-space-2: 0.5rem;
+  --v2-space-3: 0.75rem;
+  --v2-space-4: 1rem;
+  --v2-space-5: 1.25rem;
+  --v2-space-6: 1.5rem;
+  --v2-space-8: 2rem;
+  --v2-space-10: 2.5rem;
+  --v2-space-12: 3rem;
+  --v2-space-16: 4rem;
+  --v2-space-20: 5rem;
+
+  --v2-radius-sm: 0.5rem;
+  --v2-radius-md: 0.75rem;
+  --v2-radius-lg: 1rem;
+  --v2-radius-xl: 1.25rem;
+
+  --v2-shadow-sm: 0 2px 6px rgba(20, 28, 54, 0.06);
+  --v2-shadow-md: 0 10px 24px rgba(20, 28, 54, 0.08);
+  --v2-shadow-lg: 0 18px 40px rgba(20, 28, 54, 0.12);
+
+  --v2-bp-sm: 640px;
+  --v2-bp-md: 768px;
+  --v2-bp-lg: 1024px;
+  --v2-bp-xl: 1280px;
+}
+
+.v2-root {
+  background: var(--v2-bg);
+  color: var(--v2-text);
+  min-height: 100%;
+  font-family: var(--font-v2-body), sans-serif;
+}
+
+.v2-root *:focus-visible {
+  outline: 2px solid var(--v2-focus);
+  outline-offset: 2px;
+  border-radius: 0;
+}
+
+.v2-container {
+  width: min(1120px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.v2-section {
+  padding-block: clamp(3rem, 7vw, 6rem);
+}
+
+.v2-eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--v2-text-muted);
+}
+
+.v2-title {
+  font-family: var(--font-v2-display), serif;
+  letter-spacing: -0.02em;
+  font-size: clamp(2rem, 6vw, 4.3rem);
+  line-height: 1.04;
+}
+
+.v2-subtitle {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: var(--v2-text-muted);
+  line-height: 1.8;
+}
+
+.v2-grid {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.v2-grid-3 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+@media (min-width: 768px) {
+  .v2-grid-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.v2-card-surface {
+  background: var(--v2-surface-strong);
+  border: 1px solid var(--v2-border);
+  border-radius: 0;
+  box-shadow: var(--v2-shadow-sm);
+}
