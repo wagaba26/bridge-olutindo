@@ -44,3 +44,5 @@ next-env.d.ts
 codex-*.png
 dev*.log
 tmp-start-test.txt
+
+.vercel

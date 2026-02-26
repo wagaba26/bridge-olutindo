@@ -1,25 +1,19 @@
-import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-function buildCsp({
-  nonce,
-  allowInlineStyle,
-}: {
-  nonce: string;
-  allowInlineStyle: boolean;
-}) {
+function buildCsp() {
   const isDev = process.env.NODE_ENV !== "production";
-  const scriptSources = ["'self'", `'nonce-${nonce}'`, "'strict-dynamic'"];
+  const scriptSources = ["'self'", "'unsafe-inline'"];
   if (isDev) {
     scriptSources.push("'unsafe-eval'");
   }
 
-  const styleSources = allowInlineStyle ? ["'self'", "'unsafe-inline'"] : ["'self'"];
+  const styleSources = ["'self'", "'unsafe-inline'"];
 
   return [
     "default-src 'self'",
     "base-uri 'self'",
     "frame-ancestors 'none'",
+    "frame-src 'self' https://meet.jit.si https://*.daily.co https://www.youtube.com https://player.vimeo.com",
     "form-action 'self'",
     "object-src 'none'",
     "img-src 'self' data: blob: https:",
@@ -28,26 +22,15 @@ function buildCsp({
     `style-src ${styleSources.join(" ")}`,
     `script-src ${scriptSources.join(" ")}`,
     "connect-src 'self' https://*.supabase.co https://*.upstash.io https://www.googleapis.com",
-    "report-uri /api/security/csp-report",
   ].join("; ");
 }
 
-export function proxy(request: NextRequest) {
-  const nonce = crypto.randomUUID().replace(/-/g, "");
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-nonce", nonce);
+export function proxy() {
+  const response = NextResponse.next();
+  const csp = buildCsp();
 
-  const response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
-
-  const enforcedCsp = buildCsp({ nonce, allowInlineStyle: true });
-  const reportOnlyCsp = buildCsp({ nonce, allowInlineStyle: false });
-
-  response.headers.set("Content-Security-Policy", enforcedCsp);
-  response.headers.set("Content-Security-Policy-Report-Only", reportOnlyCsp);
+  response.headers.set("Content-Security-Policy", csp);
+  response.headers.set("Content-Security-Policy-Report-Only", csp);
 
   return response;
 }
@@ -55,4 +38,3 @@ export function proxy(request: NextRequest) {
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)"],
 };
-
